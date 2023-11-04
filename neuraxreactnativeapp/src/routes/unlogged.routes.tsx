@@ -1,7 +1,9 @@
 import { LoginScreen } from '../screens/LoginScreen';
 import { HomeScreen } from '../screens/HomeScreen';
+import { BluetoothSetupScreen } from '../screens/BluetoothSetupScreen';
 import { LoginScreenContextProvider } from '../context/LoginScreenContext';
 import { useStackNavigatorContext } from './StackNavigatorProvider';
+import React from 'react';
 
 
 export function UnloggedRoutes(){
@@ -29,6 +31,10 @@ export function UserRoutes(){
           return (
             <HomeScreen/>
           );
+        case 'BluetoothSetup':
+          return(
+            <BluetoothSetupScreen/>
+          )
     
         default:
           return <div>Screen not found</div>;

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, PermissionsAndroid } from 'react-native';
 import { useAuthContext } from '../../framework/auth/AuthContextProvider';
 import { UserProfileEnum } from '../../framework/domain/enum/UserProfileEnum';
-import { BigButtonText, LoginButton } from './BaseViewStyles';
+import { BaseViewStyles, BigButtonText, LoggedViewStyles, LoginButton, PrimaryButton, PrimaryGreenButton, PrimaryRedButton, RegularButtonText } from './BaseViewStyles';
+import { useStackNavigatorContext } from '../routes/StackNavigatorProvider';
+import styled from 'styled-components';
 
 
 export function HomeScreen() {
@@ -12,20 +14,67 @@ export function HomeScreen() {
         userProfile
     } =  useAuthContext()
 
-    useEffect(() => {
-
-    }, [])
+    const { push } = useStackNavigatorContext()
 
     return (
-        <View style={{ flex: 1, backgroundColor: 'blue' , justifyContent:'center'}}>
-            <BigButtonText>{userProfile === UserProfileEnum.Theraphist?("Terapeuta"):("Paciente")}</BigButtonText>
-            <LoginButton
-                activeOpacity={1}
-                onPress={logout}>
-                <BigButtonText>
-                    logout
-                </BigButtonText>
-            </LoginButton>
-        </View>
+        <BaseViewStyles>
+            <LoggedViewStyles style={{ flex: 1, flexDirection: 'col' }}>
+                <View style={{ flexDirection: 'row' }}>
+                    <View>
+                        <Text>
+                            Bem-vindo 
+                        </Text>
+                        <Text>
+                            Fulano
+                        </Text>
+                    </View>
+                    <PrimaryRedButton 
+                    style={{marginStart:'auto'}}
+                    activeOpacity={1}
+                    onPress={logout}>
+                        <Text>
+                            Logout
+                        </Text>
+                        
+                    </PrimaryRedButton>
+                </View>
+                <View style={{ flex: 1, justifyContent:'center'}}>
+                    {
+                        userProfile === UserProfileEnum.Theraphist?
+                        (
+                        <PrimaryButton
+                            activeOpacity={1}
+                            onPress={logout}>
+                            <RegularButtonText>
+                                Lista de Pacientes
+                            </RegularButtonText>
+                        </PrimaryButton>
+                        ):
+                        (
+                        <PrimaryGreenButton
+                            activeOpacity={1}
+                            onPress={logout}>
+                            <RegularButtonText>
+                                Iniciar Sessão
+                            </RegularButtonText>
+                        </PrimaryGreenButton>
+                        )}
+                    <DeviceConnectButton
+                        activeOpacity={1}
+                        onPress={()=>push('BluetoothSetup')}
+                        >
+                        <RegularButtonText>
+                            Conectar Dispositivo
+                        </RegularButtonText>
+                    </DeviceConnectButton>
+                </View>
+
+            </LoggedViewStyles>
+        </BaseViewStyles>
     );
 }
+
+export const DeviceConnectButton = styled(PrimaryButton)`
+    margin-top:30px;
+`
+

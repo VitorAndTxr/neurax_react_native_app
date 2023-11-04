@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BaseViewStyles, BigButtonText, H1, LoginButton, LoginTextLabel, StyledTextInput } from './BaseViewStyles';
+import { BigButtonText, H1,LoginButton, LoginTextLabel, LoginViewStyles, StyledTextInput } from './BaseViewStyles';
 import { useLoginScreenContext } from '../context/LoginScreenContext';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useAuthContext } from '../../framework/auth/AuthContextProvider';
@@ -10,7 +10,9 @@ export function LoginScreen() {
     const {isAuthenticating} = useAuthContext()
   
     return (
-        <BaseViewStyles>
+        <LoginViewStyles
+            style={{padding:'35px'}}
+        >
                 <H1>
                     NeuraEstimulator
                 </H1>
@@ -46,9 +48,10 @@ export function LoginScreen() {
                     size={"large"}
                     
                 />
-        </BaseViewStyles>
+        </LoginViewStyles>
 
   );
 }
+
 
 

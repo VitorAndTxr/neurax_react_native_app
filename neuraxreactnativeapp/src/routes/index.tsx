@@ -2,6 +2,8 @@ import { UnloggedRoutes, UserRoutes } from './unlogged.routes';
 import { useAuthContext } from '../../framework/auth/AuthContextProvider';
 import { UserProfileEnum } from '../../framework/domain/enum/UserProfileEnum';
 import { StackNavigatorContextProvider } from './StackNavigatorProvider';
+import { BluetoothContextProvider } from '../context/BluetoothContext';
+import React from 'react';
 
 
 export function Routes(){
@@ -22,7 +24,9 @@ export function Routes(){
         <StackNavigatorContextProvider
             InitialScreen='Home'
         >
-            <UserRoutes/>
+            <BluetoothContextProvider>
+                <UserRoutes/>
+            </BluetoothContextProvider>
         </StackNavigatorContextProvider>
     )
 
