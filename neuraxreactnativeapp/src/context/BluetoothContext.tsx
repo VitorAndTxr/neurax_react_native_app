@@ -144,8 +144,11 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
                 secureSocket: false 
             })
             
-            if(connectedDevice){
+            if(connectedDevice)
+            {
+
                 const deviceCopy:ActivableBluetoothDevice = {...connectedDevice} as ActivableBluetoothDevice
+
                 setSelectedDevice({
                     ...deviceCopy,
                     active:true
@@ -216,6 +219,7 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
 export function useBluetoothContext() {
     return useContext(BluetoothContext);
 }
+
 interface BluetoothContextData {
     bluetoothOn:boolean
 
