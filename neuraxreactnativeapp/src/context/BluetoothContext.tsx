@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { ReactNode, createContext, useContext } from "react";
-import RNBluetoothClassic, { BluetoothDevice } from 'react-native-bluetooth-classic';
+import { DeviceEventEmitter,    
+    NativeModules,
+    NativeAppEventEmitter, } from 'react-native';
+import RNBluetoothClassic, { BluetoothDevice, BluetoothEventSubscription, BluetoothNativeDevice} from 'react-native-bluetooth-classic';
 
 const BluetoothContext = createContext({} as BluetoothContextData);
 interface BluetoothContextProviderProps {
@@ -9,18 +12,37 @@ interface BluetoothContextProviderProps {
 
 type ActivableBluetoothDevice = BluetoothDevice&{active:boolean}
 
+
+
 export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
     const verifyConnectionDelayms = 10000
+    const verifySerialDelayms = 1000
+
     const [bluetoothOn, setBluetoothOn] = useState(false)
     const [reload, callReload] = useState(false)
 
     const [neuraDevices, setNeuraDevices] = useState<ActivableBluetoothDevice[]>([])
-    const [selectedDevice, setSelectedDevice] = useState<ActivableBluetoothDevice>()
+    const [selectedDevice, setSelectedDevice] = useState<BluetoothDevice>()
+    const [btDataRecieveSubscription, setBtDataRecieveSubscription] = useState<BluetoothEventSubscription>()
+    const [btDisconectSubscription, setBtDisconectSubscription] = useState<BluetoothEventSubscription>()
+
+
     const [showConnectionErrorModal, setShowConnectionErrorModal] = useState(false)
 
     useEffect(()=>{
         initBluetooth()
     },[])
+
+    useEffect(()=>{
+        if(selectedDevice!==undefined){
+        }
+    },[selectedDevice])
+
+
+
+    function removeListener() {
+
+    }
 
     async function initBluetooth() {
         try{
@@ -36,12 +58,14 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
             
         
     }
-    async function verifyCurrentConnection(currentDevice:ActivableBluetoothDevice){
+    async function verifyCurrentConnection(address:string){
         try {             
-            let response = await RNBluetoothClassic.isDeviceConnected(currentDevice.address!)
+            let response = await RNBluetoothClassic.isDeviceConnected(address)
+            
             if(response){
+                //checkSerialOutput(address)
                 setTimeout(()=>{
-                    verifyCurrentConnection(currentDevice)
+                    verifyCurrentConnection(address)
                 }, verifyConnectionDelayms)
             }
             else{
@@ -51,14 +75,37 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
             console.error(error,'BluetoothContext.verifyCurrentConnection.Error')
             
         }
+    }
 
+    async function checkSerialOutput(address:string){
+        try {          
+            let connectedDevice = await RNBluetoothClassic.connectToDevice(address ,{
+                secureSocket: false,
+                charset:'utf-8',
+                delimiter: "\n",
+            })
+
+
+            // let deviceAvaliable = await connectedDevice.available()
+            // if(deviceAvaliable>0){
+            //     let test3 = await connectedDevice.read()
+
+            //     console.log(test3);
+            //     await connectedDevice.clear()
+            // }          
+
+        }
+        catch (error) {
+            console.error(error,'BluetoothContext.checkSerialOutput.Error')
+            
+        }
     }
 
     async function updatePairedDevices(){
         try {
             let processedNeuraDevices:ActivableBluetoothDevice[] =[] 
             let boundedDevices = await RNBluetoothClassic.getBondedDevices()
-            let boundedNeuraDevices = boundedDevices.filter( item => {return item.name === 'ESP32test'})
+            let boundedNeuraDevices = boundedDevices.filter( item => {return item.name === 'ESP32'})
 
             for (let index = 0; index < boundedNeuraDevices.length; index++) {
                 const boundedNeuraDevice = boundedNeuraDevices[index];
@@ -85,22 +132,34 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
             
         }
     }
+    function dataRead(event:any){
+        console.log(event);
+        
+    }
 
     async function connectBluetooth(address:string){
-        try {
-            console.log(address);
+        try {            
             
-            let response = await RNBluetoothClassic.connectToDevice(address)
-            console.log(response);
+            let connectedDevice = await RNBluetoothClassic.connectToDevice(address,{
+                secureSocket: false 
+            })
             
-            if(response){
-                const deviceCopy:ActivableBluetoothDevice = {...response} as ActivableBluetoothDevice
+            if(connectedDevice){
+                const deviceCopy:ActivableBluetoothDevice = {...connectedDevice} as ActivableBluetoothDevice
                 setSelectedDevice({
-                    active:true,
-                    ...response
+                    ...deviceCopy,
+                    active:true
                 }as ActivableBluetoothDevice)
-                setTimeout(async ()=>{
-                    await verifyCurrentConnection(deviceCopy)
+
+                const onRecieveListener = connectedDevice.onDataReceived((data) => {
+                    console.log('Dados recebidos:', data.data);
+              
+                    // Faça algo com os dados recebidos, por exemplo, atualize a interface do usuário
+                  })
+
+                setBtDataRecieveSubscription(onRecieveListener)
+                setTimeout(()=>{
+                    verifyCurrentConnection(deviceCopy.address)
                 }, 1000)
             }
             
@@ -118,6 +177,8 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
         try {
             let response = await RNBluetoothClassic.disconnectFromDevice(selectedDevice!.address)
             if(response){
+                btDataRecieveSubscription!.remove()
+                setBtDataRecieveSubscription(undefined)
                 setSelectedDevice(undefined)
             }
 
@@ -160,8 +221,8 @@ interface BluetoothContextData {
 
     neuraDevices:ActivableBluetoothDevice[]
 
-    selectedDevice:ActivableBluetoothDevice|undefined
-    setSelectedDevice:React.Dispatch<React.SetStateAction<ActivableBluetoothDevice|undefined>>
+    selectedDevice:BluetoothDevice|undefined
+    setSelectedDevice:React.Dispatch<React.SetStateAction<BluetoothDevice|undefined>>
     showConnectionErrorModal:boolean
     setShowConnectionErrorModal:React.Dispatch<React.SetStateAction<boolean>>
     disconnect:()=>void

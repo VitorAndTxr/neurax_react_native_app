@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Text, Switch, PermissionsAndroid, Button, StyleSheet, View } from 'react-native';
+import React from 'react';
 import { BaseViewStyles, H2, H3, LoggedViewStyles, LoginTextLabel, PrimaryButton, PrimaryRedButton, RegularButtonText } from './BaseViewStyles';
-import { DeviceConnectButton } from './HomeScreen';
-import RNBluetoothClassic from 'react-native-bluetooth-classic';
+
 import { BluetoothScreenHeaderComponent } from '../components/BluetoothSetup/BluetoothScreenHeaderComponent';
 import { BluetoothDeviceInfoComponent } from '../components/BluetoothSetup/BluetoothDeviceInfoComponent';
 import { Modal } from 'react-native';
