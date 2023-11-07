@@ -1,73 +1,41 @@
 import React from 'react';
-import { BaseViewStyles, H2, H3, LoggedViewStyles, LoginTextLabel, PrimaryButton, PrimaryRedButton, RegularButtonText } from './BaseViewStyles';
+import { BaseViewStyles, H3, LoggedViewStyles, PrimaryRedButton } from './BaseViewStyles';
 
 import { BluetoothScreenHeaderComponent } from '../components/BluetoothSetup/BluetoothScreenHeaderComponent';
 import { BluetoothDeviceInfoComponent } from '../components/BluetoothSetup/BluetoothDeviceInfoComponent';
-import { Modal } from 'react-native';
+import { BluetoothConnectionErrorModal } from '../components/BluetoothSetup/BluetoothConnectionErrorModal';
+import { BluetoothTestSEmgModal } from '../components/BluetoothSetup/BluetoothTestSEmgModal';
+import { BluetoothFesConfigModal } from '../components/BluetoothSetup/BluetoothFesConfigModal';
 import { useBluetoothContext } from '../context/BluetoothContext';
-import styled from 'styled-components/native';
 
 
 export function BluetoothSetupScreen() {
+  const {
+    showSEmgTestModal, showFesTestModal, showConnectionErrorModal
+  } = useBluetoothContext();
     return (
         <BaseViewStyles>
             <LoggedViewStyles style={{ flex: 1}}>
                 <BluetoothScreenHeaderComponent/>
                 <BluetoothDeviceInfoComponent />
-                <ModalComponent/>
+                {
+                  showConnectionErrorModal
+                  &&
+                  <BluetoothConnectionErrorModal/>
+                }
+                {
+                  showFesTestModal
+                  &&
+                  <BluetoothFesConfigModal/>
+                }
+                {
+                  showSEmgTestModal
+                  && 
+                  <BluetoothTestSEmgModal/>
+                }
             </LoggedViewStyles>
         </BaseViewStyles>
     );
 }
-
-const ModalComponent = () => {
-    const {
-        showConnectionErrorModal,
-        setShowConnectionErrorModal
-    } = useBluetoothContext()
-    return (
-      <Modal transparent={true} visible={showConnectionErrorModal} animationType="slide">
-        <ModalContainer>
-          <ModalContent>
-            <H2 style={{
-                marginBottom:20
-                }}>
-                    Falha na conexão
-            </H2>
-            <LoginTextLabel 
-                style={{
-                    marginBottom:20, 
-                    textAlign:'center'
-                }}>
-                O dispositivo selecionado não está disponível para conexão
-            </LoginTextLabel>
-
-            <PrimaryButton onPress={()=>setShowConnectionErrorModal(false)}>
-                <RegularButtonText>
-                    Ok
-                </RegularButtonText>
-            </PrimaryButton>
-          </ModalContent>
-        </ModalContainer>
-      </Modal>
-    );
-  };
-  
-  const ModalContainer = styled.View`
-      flex: 1;
-      justify-content:center;
-      align-items:center;
-      background-color: #000000cc;
-`
-
-  const ModalContent = styled.View`
-    background-color: white;
-      padding: 20px;
-      border-radius: 10px;
-      margin-left:5px;
-  `
-
-
-
 
 

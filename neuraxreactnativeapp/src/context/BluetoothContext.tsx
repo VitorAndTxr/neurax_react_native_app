@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { ReactNode, createContext, useContext } from "react";
 import { DeviceEventEmitter,    
     NativeModules,
-    NativeAppEventEmitter, } from 'react-native';
+    NativeAppEventEmitter,
+    BackHandler, } from 'react-native';
 import RNBluetoothClassic, { BluetoothDevice, BluetoothEventSubscription, BluetoothNativeDevice} from 'react-native-bluetooth-classic';
 
 const BluetoothContext = createContext({} as BluetoothContextData);
@@ -28,21 +29,37 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
 
 
     const [showConnectionErrorModal, setShowConnectionErrorModal] = useState(false)
+    const [showFesTestModal, setShowFesTestModal] = useState(false)
+    const [showSEmgTestModal, setShowSEmgTestModal] = useState(false)
+
+
+    function closeFesTestModal() {
+        setShowFesTestModal(false)
+    }
+
 
     useEffect(()=>{
         initBluetooth()
     },[])
 
     useEffect(()=>{
-        if(selectedDevice!==undefined){
-        }
+
     },[selectedDevice])
 
+    useEffect(()=>{
+        const backAction = () => {
+            closeFesTestModal(); // Close the modal
+            return true; // Prevent default behavior (app exit)
+        };
+        
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
 
+        return () => {
+          backHandler.remove(); // Remove the event listener when the component unmounts
+        };
+    
+    },[setShowFesTestModal])
 
-    function removeListener() {
-
-    }
 
     async function initBluetooth() {
         try{
@@ -199,7 +216,10 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
             <BluetoothContext.Provider value={{
                 bluetoothOn,
                 neuraDevices,
+
                 showConnectionErrorModal, setShowConnectionErrorModal,
+                showFesTestModal, setShowFesTestModal,
+                showSEmgTestModal, setShowSEmgTestModal,
 
                 selectedDevice,
                 setSelectedDevice,
@@ -227,8 +247,16 @@ interface BluetoothContextData {
 
     selectedDevice:BluetoothDevice|undefined
     setSelectedDevice:React.Dispatch<React.SetStateAction<BluetoothDevice|undefined>>
+
     showConnectionErrorModal:boolean
     setShowConnectionErrorModal:React.Dispatch<React.SetStateAction<boolean>>
+
+    showFesTestModal:boolean
+    setShowFesTestModal:React.Dispatch<React.SetStateAction<boolean>>
+
+    showSEmgTestModal:boolean
+    setShowSEmgTestModal:React.Dispatch<React.SetStateAction<boolean>>
+
     disconnect:()=>void
     openBluetoothSettings:()=>void
     initBluetooth:()=>void

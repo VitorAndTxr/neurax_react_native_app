@@ -72,6 +72,13 @@ export const LoginTextLabel = styled.Text`
     font-family:Inter_600Bold;
     font-size:18px;
 `
+export const InputLabel = styled.Text`
+    text-align: left;
+    color: #08415C;
+    font-family:Inter_700Bold;
+    font-weight:700;
+    font-size:18px;
+`
 export const LoginTextBold = styled(LoginTextLabel)`
     font-weight:600;
 `

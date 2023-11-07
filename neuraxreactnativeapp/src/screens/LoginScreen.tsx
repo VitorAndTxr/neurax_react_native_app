@@ -21,7 +21,6 @@ export function LoginScreen() {
                 </LoginTextLabel>
                 <StyledTextInput
                     onChangeText={(login:string) => setLogin(login)}
-
                     editable
                 />
                 <LoginTextLabel>

@@ -29,9 +29,10 @@ export function HomeScreen() {
                         </Text>
                     </View>
                     <PrimaryRedButton 
-                    style={{marginStart:'auto'}}
-                    activeOpacity={1}
-                    onPress={logout}>
+                        style={{marginStart:'auto'}}
+                        activeOpacity={1}
+                        onPress={logout}
+                    >
                         <Text>
                             Logout
                         </Text>

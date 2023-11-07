@@ -11,7 +11,9 @@ export function BluetoothDeviceInfoComponent() {
         initBluetooth, 
         neuraDevices, 
         selectedDevice,
-        disconnect
+        disconnect,
+        setShowFesTestModal,
+        setShowSEmgTestModal
     } = useBluetoothContext();
 
     const neuraRenderedDevices = [...neuraDevices];
@@ -81,7 +83,7 @@ export function BluetoothDeviceInfoComponent() {
                                         </View>
                                         <TestButton 
                                             activeOpacity={1} 
-                                            onPress={()=>console.log(selectedDevice)} 
+                                            onPress={()=>setShowFesTestModal(true)} 
                                             style={{
                                                 marginStart: 'auto',
                                                 marginTop:30
@@ -92,7 +94,7 @@ export function BluetoothDeviceInfoComponent() {
                                         </TestButton>
                                         <TestButton 
                                             activeOpacity={1} 
-                                            onPress={()=>console.log(selectedDevice)} 
+                                            onPress={()=>setShowSEmgTestModal(true)} 
                                             style={{
                                                 marginStart: 'auto',
                                                 marginTop:20
