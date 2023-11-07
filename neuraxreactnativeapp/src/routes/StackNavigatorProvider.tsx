@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BackHandler } from 'react-native';
 import { ReactNode, createContext, useContext } from "react";
+import {useBackHandler} from '@react-native-community/hooks'
 
 const StackNavigatorContext = createContext({} as StackNavigatorContextData)
 
@@ -13,18 +14,12 @@ interface StackNavigatorContextProviderProps {
 export function StackNavigatorContextProvider(props: StackNavigatorContextProviderProps) {
 
     const [stack, setStack] = useState<string[]>([]);
-    useEffect(() => {
-        const handleBackButton = () => {
-            pop()
-            return true;
-        };
-        
-        BackHandler.addEventListener('hardwareBackPress', handleBackButton);
-        
-        return () => {
-            BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
-        };
-    }, []);
+
+    useBackHandler(() => {
+        pop()
+        return true
+      })
+
 
     const push = (route:string) => {
     setStack((prevStack) => [...prevStack, route]);
