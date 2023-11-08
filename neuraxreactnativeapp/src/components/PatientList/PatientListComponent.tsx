@@ -19,20 +19,24 @@ export function PatientListComponent() {
     }}>
       <SafeAreaView>
         <ScrollView>
-          <CardStyle>
-            <View style={{ flexDirection: "row" }}>
-              <LoginTextLabel>Nome:</LoginTextLabel>
-              <LoginTextLabel style={{ marginStart: 'auto' }}>
-                Nome do fulano
-              </LoginTextLabel>
-            </View>
-            <View style={{ flexDirection: "row" }}>
-              <LoginTextLabel>Nascimento:</LoginTextLabel>
-              <LoginTextLabel style={{ marginStart: 'auto' }}>
-                00/00/0000
-              </LoginTextLabel>
-            </View>
-          </CardStyle>
+          {renderedPatients.map((patient) => {
+            return (
+              <CardStyle>
+                <View style={{ flexDirection: "row" }}>
+                  <LoginTextLabel>Nome:</LoginTextLabel>
+                  <LoginTextLabel style={{ marginStart: 'auto' }}>
+                    {patient.name}
+                  </LoginTextLabel>
+                </View>
+                <View style={{ flexDirection: "row" }}>
+                  <LoginTextLabel>Nascimento:</LoginTextLabel>
+                  <LoginTextLabel style={{ marginStart: 'auto' }}>
+                    {patient.birthDate}
+                  </LoginTextLabel>
+                </View>
+              </CardStyle>
+            );
+          })}
         </ScrollView>
       </SafeAreaView>
     </View>

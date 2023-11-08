@@ -8,10 +8,10 @@ import { PatientListViewModel } from "../domain/models/PatientListViewModel";
 
 
 export default class PatientService {
-    public async getPatients(): Promise<ApiPaginatedResponse<PatientListViewModel> | undefined> {
+    public async getPatients(): Promise<ApiResponse<PatientListViewModel[]> | undefined> {
         try {
             let endpoint = `/Therapist/GetPatients`;
-            let response: AxiosResponse<ApiPaginatedResponse<PatientListViewModel>> = await ApiInterface.get(endpoint);
+            let response: AxiosResponse<ApiResponse<PatientListViewModel[]>> = await ApiInterface.get(endpoint);
             return response.data;
         } catch (error) {
             console.error(error);

@@ -4,7 +4,7 @@ import TokenService from "../auth/TokenService";
 const tokenService = TokenService.getInstance()
 
 const ApiInterface = axios.create({
-  baseURL: process.env.REACT_APP_API_URL + "/api/v1",
+  baseURL: "https://neuroestimulator-api.azurewebsites.net/api/v1",
   headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',

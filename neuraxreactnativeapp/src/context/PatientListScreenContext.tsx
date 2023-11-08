@@ -9,14 +9,14 @@ import { PatientListViewModel } from '../domain/models/PatientListViewModel';
 const patientService = new PatientService();
 
 
-const PatientListScreenContext = createContext({} as PatientListScreenContext);
+const PatientListScreenContext = createContext({} as PatientListScreenContextData);
 interface PatientListScreenContextProviderProps {
     children: ReactNode;
 }
 
 export function PatientListScreenContextProvider(props: PatientListScreenContextProviderProps) {
 
-    const [patients, setPatients] = useState<PatientListViewModel[]>({} as any)
+    const [patients, setPatients] = useState<PatientListViewModel[]>([])
 
     useEffect(()=>{
         getPatients()
@@ -39,11 +39,11 @@ export function PatientListScreenContextProvider(props: PatientListScreenContext
 
     return (
         <>
-            <PatientListScreenScreenContext.Provider value={{
+            <PatientListScreenContext.Provider value={{
                 patients
             }}>
                 {props.children}
-            </PatientListScreenScreenContext.Provider>
+            </PatientListScreenContext.Provider>
         </>
     );
 }

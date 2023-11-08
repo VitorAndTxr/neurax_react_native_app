@@ -3,11 +3,14 @@ import {
 } from './BaseViewStyles';
 import { PatientListComponent } from '../components/PatientList/PatientListComponent';
 import { BluetoothScreenHeaderComponent } from '../components/BluetoothSetup/BluetoothScreenHeaderComponent';
+import { PatientListScreenContextProvider } from '../context/PatientListScreenContext';
 
 export function PatientListScreen() {
   return (<BaseViewStyles>
     <LoggedViewStyles style={{ flex: 1}}>
-      <PatientListComponent/>
+      <PatientListScreenContextProvider>
+        <PatientListComponent/>
+      </PatientListScreenContextProvider>
     </LoggedViewStyles>
   </BaseViewStyles>);
 }
