@@ -1,18 +1,28 @@
-import { View, ScrollView, SafeAreaView } from 'react-native';
+import { View, ScrollView, SafeAreaView, Text } from 'react-native';
 import styled from 'styled-components/native';
-import { H2, LoginTextLabel, PrimaryButton, RegularButtonText } from '../../screens/BaseViewStyles';
-import { usePatientListScreenContext } from '../../context/PatientListScreenContext';
+import { H3, LoginTextLabel, PrimaryButton, RegularButtonText, PrimaryGreenButton } from '../../screens/BaseViewStyles';
+import { useTherapistContext } from '../../context/TherapistContext';
+import { useStackNavigatorContext } from '../../routes/StackNavigatorProvider';
 
 export function PatientListComponent() {
-  const {patients} = usePatientListScreenContext();
+  const {patients} = useTherapistContext();
   const renderedPatients = [...patients];
   
+  const { push } = useStackNavigatorContext()
   return (<View style={{
     justifyContent: 'center',
     flexDirection: 'col',
     marginTop:'300px',
   }}>
-    <H2>Lista de Pacientes</H2>
+    <View style={{ flexDirection: "row" }}>
+      <View style={{justifyContent: 'center'}}><H3 style={{marginBottom: 0}}>Lista de Pacientes</H3></View>
+    
+    <PrimaryGreenButton style={{marginStart:'auto'}} activeOpacity={1}>
+      <Text>+</Text>
+    </PrimaryGreenButton>
+    </View>
+
+
     <View style={{
             paddingTop:30,
             paddingBottom:30,
@@ -21,7 +31,8 @@ export function PatientListComponent() {
         <ScrollView>
           {renderedPatients.map((patient) => {
             return (
-              <CardStyle>
+              <CardStyle key={patient.id} onPress={() => push('PatientDetails')}>
+                
                 <View style={{ flexDirection: "row" }}>
                   <LoginTextLabel>Nome:</LoginTextLabel>
                   <LoginTextLabel style={{ marginStart: 'auto' }}>
@@ -31,7 +42,7 @@ export function PatientListComponent() {
                 <View style={{ flexDirection: "row" }}>
                   <LoginTextLabel>Nascimento:</LoginTextLabel>
                   <LoginTextLabel style={{ marginStart: 'auto' }}>
-                    {patient.birthDate}
+                    {(new Date(patient.birthDate)).toLocaleDateString()}
                   </LoginTextLabel>
                 </View>
               </CardStyle>
