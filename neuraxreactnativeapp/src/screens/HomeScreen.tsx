@@ -45,7 +45,7 @@ export function HomeScreen() {
                         (
                         <PrimaryButton
                             activeOpacity={1}
-                            onPress={logout}>
+                            onPress={()=>push('PatientList')}>
                             <RegularButtonText>
                                 Lista de Pacientes
                             </RegularButtonText>

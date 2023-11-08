@@ -4,6 +4,7 @@ import { BluetoothSetupScreen } from '../screens/BluetoothSetupScreen';
 import { LoginScreenContextProvider } from '../context/LoginScreenContext';
 import { useStackNavigatorContext } from './StackNavigatorProvider';
 import React from 'react';
+import { PatientListScreen } from '../screens/PatientListScreen';
 
 
 export function UnloggedRoutes(){
@@ -34,8 +35,11 @@ export function UserRoutes(){
         case 'BluetoothSetup':
           return(
             <BluetoothSetupScreen/>
-          )
-    
+          );
+        case 'PatientList':
+          return(
+            <PatientListScreen/>
+          );
         default:
           return <div>Screen not found</div>;
       }
