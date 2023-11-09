@@ -262,3 +262,65 @@ interface BluetoothContextData {
     initBluetooth:()=>void
     connectBluetooth:(address:string)=>void
 }
+
+enum NeuraXBluetoothProtocolFunctionEnum{
+    ConnectionHandshake,
+    GyroscopeReading,
+    StartSession,
+    StopSession,
+    PauseSession,
+    ResumeSession,
+    SingleStimuli,
+    FesParam,
+    Status,
+    ACK
+}
+
+enum NeuraXBluetoothProtocolMethodEnum{
+    READ = 'r',
+    WRITE = 'w',
+    EXECUTE = 'x',
+    ACK = 'a'
+}
+
+enum NeuraXBluetoothProtocolBodyPropertyEnum{
+    ANGLE = 'a',
+    AMPLITUDE = 'a',
+    FREQUENCY = 'f',
+    PULSE_WIDTH = 'pw',
+    DIFFICULTY = 'df',
+    STIMULI_DURATION = 'pd',
+    COOMPLETE_STIMULI_AMOUNT = 'csa',
+    INTERRUPTED_STIMULI_AMOUNT = 'isa',
+    TIME_OF_LAST_TRIGGER = 'tlt',
+    SESSION_DURATION = 'sd',
+    MAXIMUM_SESSION_DURATION = 'm',
+
+
+
+}
+
+enum NeuraXBluetoothProtocolBodyFieldEnum{
+    CODE = 'cd',
+    METHOD = 'mt',
+    BODY =  'bd'
+}
+
+type NeuraXBluetoothProtocolPayload = {
+    [NeuraXBluetoothProtocolBodyFieldEnum.CODE]:number,
+    [NeuraXBluetoothProtocolBodyFieldEnum.METHOD]:string,
+    [NeuraXBluetoothProtocolBodyFieldEnum.BODY]:NeuraXBluetoothProtocolBody
+}
+
+type NeuraXBluetoothProtocolBody = {
+    [NeuraXBluetoothProtocolBodyPropertyEnum.AMPLITUDE]: number | undefined,
+    [NeuraXBluetoothProtocolBodyPropertyEnum.FREQUENCY]: number | undefined,
+    [NeuraXBluetoothProtocolBodyPropertyEnum.PULSE_WIDTH]: number | undefined,
+    [NeuraXBluetoothProtocolBodyPropertyEnum.DIFFICULTY]: number | undefined,
+    [NeuraXBluetoothProtocolBodyPropertyEnum.STIMULI_DURATION] :number | undefined,
+    [NeuraXBluetoothProtocolBodyPropertyEnum.COOMPLETE_STIMULI_AMOUNT]: number | undefined,
+    [NeuraXBluetoothProtocolBodyPropertyEnum.INTERRUPTED_STIMULI_AMOUNT]: number | undefined,
+    [NeuraXBluetoothProtocolBodyPropertyEnum.TIME_OF_LAST_TRIGGER]: number | undefined,
+    [NeuraXBluetoothProtocolBodyPropertyEnum.SESSION_DURATION]: number | undefined,
+    [NeuraXBluetoothProtocolBodyPropertyEnum.MAXIMUM_SESSION_DURATION]:number | undefined,
+}
