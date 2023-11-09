@@ -1,12 +1,12 @@
 import { View, ScrollView, SafeAreaView, Text } from 'react-native';
 import styled from 'styled-components/native';
-import { H2, LoginTextLabel, PrimaryButton, RegularButtonText, PrimaryGreenButton, PrimaryRedButton } from '../../screens/BaseViewStyles';
+import { H3, LoginTextLabel, PrimaryButton, RegularButtonText, PrimaryGreenButton, PrimaryRedButton } from '../../screens/BaseViewStyles';
 import { useTherapistContext } from '../../context/TherapistContext';
 import { useStackNavigatorContext } from '../../routes/StackNavigatorProvider';
 
 export function PatientDetailsComponent() {
-  const {patients} = useTherapistContext();
-  const renderedPatients = [...patients];
+  const {selectedPatient} = useTherapistContext();
+  const patient = selectedPatient;
   
   const { push } = useStackNavigatorContext()
   return (<View style={{
@@ -14,7 +14,7 @@ export function PatientDetailsComponent() {
     flexDirection: 'col',
     marginTop:'300px',
   }}>
-    <H2>Lista de Pacientes</H2>
+    <H3 style={{marginBottom: '15px'}}>Informações do Paciente</H3>
 
     <View style={{
             paddingTop:30,
@@ -27,94 +27,90 @@ export function PatientDetailsComponent() {
                 <View style={{ flexDirection: "row" }}>
                   <LoginTextLabel>Nome:</LoginTextLabel>
                   <LoginTextLabel style={{ marginStart: 'auto' }}>
-                    Fulano
+                    {patient.name}
                   </LoginTextLabel>
                 </View>
                 <View style={{ flexDirection: "row" }}>
                   <LoginTextLabel>Nascimento:</LoginTextLabel>
                   <LoginTextLabel style={{ marginStart: 'auto' }}>
-                    {(new Date('1999-09-23')).toLocaleDateString()}
+                    {(new Date(patient.birthDate)).toLocaleDateString()}
                   </LoginTextLabel>
                 </View>
                 <View style={{ flexDirection: "row" }}>
                   <LoginTextLabel>Email:</LoginTextLabel>
                   <LoginTextLabel style={{ marginStart: 'auto' }}>
-                    email@teste.com
+                    {patient.email}
                   </LoginTextLabel>
                 </View>
                 <View style={{ flexDirection: "row" }}>
                   <LoginTextLabel>Telefone:</LoginTextLabel>
                   <LoginTextLabel style={{ marginStart: 'auto' }}>
-                    00 00000000
+                    {patient.phone}
                   </LoginTextLabel>
                 </View>
                 <View style={{ flexDirection: "row" }}>
                   <LoginTextLabel>Resp.:</LoginTextLabel>
                   <LoginTextLabel style={{ marginStart: 'auto' }}>
-                    Fulano de tal
+                    {patient.caretakerName}
                   </LoginTextLabel>
                 </View>
                 <View style={{ flexDirection: "row" }}>
                   <LoginTextLabel>Tel. Resp.:</LoginTextLabel>
                   <LoginTextLabel style={{ marginStart: 'auto' }}>
-                    Fulano de tal
+                    {patient.caretakerPhone}
                   </LoginTextLabel>
                 </View>
 
                 
 
               </CardStyle>
-              <View style={{
-            paddingTop:15,
-            paddingBottom:10,
-    }}>
+              <View style={{paddingTop:10, flex: 1, justifyContent:'center'}}>
                 <PrimaryGreenButton
+                    activeOpacity={1}
+                    onPress={()=>push('PatientList')}>
+                    <RegularButtonText  style={{fontSize:20}}>
+                        Iniciar Sessão
+                    </RegularButtonText>
+                </PrimaryGreenButton>
+                        <CustomPrimaryButton
                             activeOpacity={1}
                             onPress={()=>push('PatientList')}>
-                            <RegularButtonText>
-                                Iniciar Sessão
-                            </RegularButtonText>
-                        </PrimaryGreenButton>
-                        <PrimaryButton
-                            activeOpacity={1}
-                            onPress={()=>push('PatientList')}>
-                            <RegularButtonText>
+                            <RegularButtonText style={{fontSize:20}}>
                                 Histórico de Sessões
                             </RegularButtonText>
-                        </PrimaryButton>
-                        <PrimaryButton
+                        </CustomPrimaryButton>
+                        <CustomPrimaryButton
                             activeOpacity={1}
                             onPress={()=>push('PatientList')}>
-                            <RegularButtonText>
+                            <RegularButtonText  style={{fontSize:20}}>
                                 Parâmetros
                             </RegularButtonText>
-                        </PrimaryButton>
-                        <PrimaryGreenButton
+                        </CustomPrimaryButton>
+                        <CustomPrimaryGreenButton
                             activeOpacity={1}
                             onPress={()=>push('PatientList')}>
-                            <RegularButtonText>
+                            <RegularButtonText  style={{fontSize:20}}>
                                 Liberar sessões
                             </RegularButtonText>
-                        </PrimaryGreenButton>
-                        <PrimaryButton
+                        </CustomPrimaryGreenButton>
+                        <CustomPrimaryButton
                             activeOpacity={1}
                             onPress={()=>push('PatientList')}>
-                            <RegularButtonText>
+                            <RegularButtonText  style={{fontSize:20}}>
                                 Editar Informações
                             </RegularButtonText>
-                        </PrimaryButton>
-                        <PrimaryRedButton
+                        </CustomPrimaryButton>
+                        <CustomPrimaryRedButton
                             activeOpacity={1}
                             onPress={()=>push('PatientList')}>
-                            <RegularButtonText>
+                            <RegularButtonText  style={{fontSize:20}}>
                                 Excluir Paciente
                             </RegularButtonText>
-                        </PrimaryRedButton>
+                        </CustomPrimaryRedButton>
                 </View>
         </ScrollView>
       </SafeAreaView>
     </View>
-
   </View>);
 }
 
@@ -126,3 +122,16 @@ const CardStyle = styled.TouchableOpacity`
     border-radius:10px;
     padding: 15px; 
 `;
+
+export const CustomPrimaryButton = styled(PrimaryButton)`
+    margin-top:5px;
+    padding: 15px;
+`
+export const CustomPrimaryGreenButton = styled(PrimaryGreenButton)`
+    margin-top:5px;
+    padding: 15px;
+`
+export const CustomPrimaryRedButton = styled(PrimaryRedButton)`
+    margin-top:5px;
+    padding: 15px;
+`

@@ -3,6 +3,8 @@ import { useAuthContext } from '../../framework/auth/AuthContextProvider';
 import { UserProfileEnum } from '../../framework/domain/enum/UserProfileEnum';
 import { StackNavigatorContextProvider } from './StackNavigatorProvider';
 import { BluetoothContextProvider } from '../context/BluetoothContext';
+import { TherapistContextProvider } from '../context/TherapistContext';
+
 import React from 'react';
 
 
@@ -13,19 +15,17 @@ export function Routes(){
 
     if(userProfile===UserProfileEnum.Unlogged){
         return(
-            <StackNavigatorContextProvider
-                InitialScreen='Login'
-            >
+            <StackNavigatorContextProvider InitialScreen='Login'>
                 <UnloggedRoutes/>
             </StackNavigatorContextProvider>
         )
     }
     return(
-        <StackNavigatorContextProvider
-            InitialScreen='Home'
-        >
+        <StackNavigatorContextProvider InitialScreen='Home'>
             <BluetoothContextProvider>
-                <UserRoutes/>
+                <TherapistContextProvider>
+                    <UserRoutes/>
+                </TherapistContextProvider>
             </BluetoothContextProvider>
         </StackNavigatorContextProvider>
     )

@@ -5,6 +5,7 @@ import { useAuthContext } from '../../framework/auth/AuthContextProvider';
 import TokenService from '../../framework/auth/TokenService';
 import PatientService from '../services/PatientService';
 import { PatientListViewModel } from '../domain/models/PatientListViewModel';
+import { PatientViewModel } from '../domain/models/PatientViewModel';
 
 const patientService = new PatientService();
 
@@ -18,15 +19,12 @@ export function TherapistContextProvider(props: TherapistContextProviderProps) {
 
     const [patients, setPatients] = useState<PatientListViewModel[]>([])
 
-    const [selectedPatient, setSelectedPatient] = useState('')
+    
+    const [selectedPatient, setSelectedPatient] = useState<PatientViewModel>({} as PatientViewModel);
 
     useEffect(()=>{
         getPatients()
     },[])
-
-    useEffect(()=>{
-        //codigo
-    },[selectedPatient])
 
     function getPatients(){
 
@@ -35,18 +33,42 @@ export function TherapistContextProvider(props: TherapistContextProviderProps) {
             if(response?.success){
                 setPatients(response.result)
             }
-    
         })
         .catch((response)=>{
 
         })
     }
 
+    function getPatientById(guid: string){
+
+        patientService.getPatientById(guid)
+        .then((response)=>{
+            if(response?.success){
+                console.log(response.result)
+                setSelectedPatient(response.result)
+            }
+        })
+        .catch((response)=>{
+
+        })
+    }
+    
+    const [patientId, setPatientId] = useState('');
+    useEffect(()=>{
+        console.log("setou paciente id");
+        console.log(patientId);
+        if(patientId != ''){
+            console.log("chama update paciente");
+            getPatientById(patientId);
+        }
+        
+    },[patientId])
 
     return (
         <>
             <TherapistContext.Provider value={{
-                patients
+                patients, patientId, setPatientId, selectedPatient
+
             }}>
                 {props.children}
             </TherapistContext.Provider>
@@ -58,8 +80,9 @@ export function useTherapistContext() {
     return useContext(TherapistContext);
 }
 interface TherapistContextData {
-    patients: PatientListViewModel[];
+  patients: PatientListViewModel[];
 
-    selectedPatient:string;
-    selectedPatient: React.Dispatch<React.SetStateAction<string>>;
+  patientId:string;
+  setPatientId: React.Dispatch<React.SetStateAction<string>>;
+  selectedPatient: PatientViewModel;
 }

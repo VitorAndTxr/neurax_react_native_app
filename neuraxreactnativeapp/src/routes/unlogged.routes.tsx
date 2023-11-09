@@ -6,7 +6,7 @@ import { useStackNavigatorContext } from './StackNavigatorProvider';
 import React from 'react';
 import { PatientListScreen } from '../screens/PatientListScreen';
 import { PatientDetailsScreen } from '../screens/PatientDetailsScreen';
-
+import { PatientFormScreen } from '../screens/PatientFormScreen';
 
 export function UnloggedRoutes(){
 
@@ -44,6 +44,10 @@ export function UserRoutes(){
           case 'PatientDetails':
             return(
               <PatientDetailsScreen/>
+            );
+          case 'NewPatient':
+            return(
+              <PatientFormScreen/>
             );  
         default:
           return <div>Screen not found</div>;
