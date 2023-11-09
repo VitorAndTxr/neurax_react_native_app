@@ -8,6 +8,7 @@ import { PatientListScreen } from '../screens/PatientListScreen';
 import { PatientDetailsScreen } from '../screens/PatientDetailsScreen';
 import { PatientFormScreen } from '../screens/PatientFormScreen';
 
+
 export function UnloggedRoutes(){
 
     const {currentScreen} = useStackNavigatorContext()
@@ -36,19 +37,19 @@ export function UserRoutes(){
         case 'BluetoothSetup':
           return(
             <BluetoothSetupScreen/>
-          );
+            );
         case 'PatientList':
           return(
             <PatientListScreen/>
           );
-          case 'PatientDetails':
-            return(
-              <PatientDetailsScreen/>
-            );
-          case 'NewPatient':
-            return(
-              <PatientFormScreen/>
-            );  
+        case 'PatientDetails':
+          return(
+            <PatientDetailsScreen/>
+          );
+        case 'NewPatient':
+          return(
+            <PatientFormScreen/>
+          );  
         default:
           return <div>Screen not found</div>;
       }
