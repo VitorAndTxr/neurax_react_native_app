@@ -116,7 +116,7 @@ export function BluetoothDeviceInfoComponent() {
                                         </TestButton>
                                         <DisconnectButton 
                                             activeOpacity={1} 
-                                            onPress={disconnect} 
+                                            onPress={()=>disconnect(selectedDevice.address)} 
                                             style={{
                                                 marginStart: 'auto',
                                                 marginTop:20

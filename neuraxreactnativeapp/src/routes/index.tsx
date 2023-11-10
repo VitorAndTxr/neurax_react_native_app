@@ -12,22 +12,26 @@ export function Routes(){
     const{ 
         userProfile,
     } =  useAuthContext()
-
-    if(userProfile===UserProfileEnum.Unlogged){
-        return(
-            <StackNavigatorContextProvider InitialScreen='Login'>
-                <UnloggedRoutes/>
+    switch(userProfile){
+        case UserProfileEnum.Theraphist:
+            return(
+            <StackNavigatorContextProvider InitialScreen='Home'>
+                <BluetoothContextProvider>
+                    <TherapistContextProvider>
+                        <UserRoutes/>
+                    </TherapistContextProvider>
+                </BluetoothContextProvider>
             </StackNavigatorContextProvider>
-        )
+            )
+        case UserProfileEnum.Patient:
+            return(
+            <>
+            </>)
+        default:
+            return(
+                <StackNavigatorContextProvider InitialScreen='Login'>
+                    <UnloggedRoutes/>
+                </StackNavigatorContextProvider>
+            )
     }
-    return(
-        <StackNavigatorContextProvider InitialScreen='Home'>
-            <BluetoothContextProvider>
-                <TherapistContextProvider>
-                    <UserRoutes/>
-                </TherapistContextProvider>
-            </BluetoothContextProvider>
-        </StackNavigatorContextProvider>
-    )
-
 }
