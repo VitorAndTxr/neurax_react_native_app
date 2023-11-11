@@ -141,7 +141,6 @@ class TokenService {
      async userHasProfile(profileCode: string) : Promise<boolean>{
 
         let decodedToken = await this.getDecodedToken()
-        console.log(decodedToken,'decodedToken');
         
         if (!decodedToken || !decodedToken.profiles?.length) {
             return false;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { H3, LoginTextBold, LoginTextLabel, PrimaryButton, PrimaryRedButton, RegularButtonText } from '../../screens/BaseViewStyles';
+import { H3, LoginTextBold, LoginTextLabel, PrimaryButton, PrimaryRedButton, RegularButtonText } from '../BaseViewStyles';
 import { useBluetoothContext } from '../../context/BluetoothContext';
 import { PairedDeviceListComponent } from './PairedDeviceListComponent';
 import styled from 'styled-components';
@@ -13,7 +13,8 @@ export function BluetoothDeviceInfoComponent() {
         selectedDevice,
         disconnect,
         setShowFesTestModal,
-        setShowSEmgTestModal
+        setShowSEmgTestModal,
+        setShowTestGyroscopeModal
     } = useBluetoothContext();
 
     const neuraRenderedDevices = [...neuraDevices];
@@ -105,7 +106,7 @@ export function BluetoothDeviceInfoComponent() {
                                         </TestButton>
                                         <TestButton 
                                             activeOpacity={1} 
-                                            onPress={()=>console.log(selectedDevice)} 
+                                            onPress={()=>setShowTestGyroscopeModal(true)} 
                                             style={{
                                                 marginStart: 'auto',
                                                 marginTop:20

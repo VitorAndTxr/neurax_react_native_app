@@ -1,6 +1,6 @@
 import {
   BaseViewStyles, LoggedViewStyles
-} from './BaseViewStyles';
+} from '../components/BaseViewStyles';
 import { PatientListComponent } from '../components/PatientList/PatientListComponent';
 
 export function PatientListScreen() {

@@ -1,6 +1,6 @@
 import {
     BaseViewStyles, LoggedViewStyles
-  } from './BaseViewStyles';
+  } from '../components/BaseViewStyles';
   import { PatientFormComponent } from '../components/PatientList/PatientFormComponent';
   
   export function PatientFormScreen() {

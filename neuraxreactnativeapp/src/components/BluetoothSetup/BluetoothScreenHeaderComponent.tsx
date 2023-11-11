@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { H2, LoginTextLabel, PrimaryButton, RegularButtonText } from '../../screens/BaseViewStyles';
+import { H2, LoginTextLabel, PrimaryButton, RegularButtonText } from '../BaseViewStyles';
 import { useBluetoothContext } from '../../context/BluetoothContext';
 
 export function BluetoothScreenHeaderComponent() {

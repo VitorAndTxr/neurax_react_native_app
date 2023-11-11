@@ -1,6 +1,6 @@
 import { View, ScrollView, SafeAreaView, Text } from 'react-native';
 import styled from 'styled-components/native';
-import { H3, LoginTextLabel, PrimaryButton, RegularButtonText, PrimaryGreenButton, PrimaryRedButton, StyledTextInput, LoginButton } from '../../screens/BaseViewStyles';
+import { H3, LoginTextLabel, PrimaryButton, RegularButtonText, PrimaryGreenButton, PrimaryRedButton, StyledTextInput, LoginButton } from '../BaseViewStyles';
 import { useTherapistContext } from '../../context/TherapistContext';
 import { useStackNavigatorContext } from '../../routes/StackNavigatorProvider';
 import Spinner from 'react-native-loading-spinner-overlay';

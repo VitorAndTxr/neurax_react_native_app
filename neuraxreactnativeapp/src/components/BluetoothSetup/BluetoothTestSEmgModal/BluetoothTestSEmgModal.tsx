@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { H2, LoginTextLabel, PrimaryButton, RegularButtonText } from '../../screens/BaseViewStyles';
+import { H2, LoginTextLabel, PrimaryButton, RegularButtonText } from '../../BaseViewStyles';
 import { Modal, View, TextInput, BackHandler} from 'react-native';
-import { useBluetoothContext } from '../../context/BluetoothContext';
-import { ModalContainer, ModalContent } from './BluetoothConnectionErrorModal';
+import { NeuraXBluetoothProtocolBodyPropertyEnum, useBluetoothContext } from '../../../context/BluetoothContext';
+import { ModalContainer, ModalContent } from '../BluetoothConnectionErrorModal';
 import { Divider } from '@rneui/themed';
 import { RenderBluetoothTestSEmgModalState } from './RenderBluetoothTestSEmgModalState';
 
@@ -17,17 +17,12 @@ export const BluetoothTestSEmgModal = () => {
     setShowSEmgTestModal, 
     showSEmgTestModal,
     triggerDettected,
-    onChangeSEmgDificulty,
+    onChange,
     fesParams,
     testFes
   } = useBluetoothContext();
 
   const [ modalState , setModalState] =  useState<BluetoothTestSEmgModalState>(BluetoothTestSEmgModalState.selectDificulty)
-
-  useEffect(()=>{
-    
-    },[]
-  )
 
   function testSEmg(){
     setModalState(BluetoothTestSEmgModalState.loading)
@@ -56,7 +51,7 @@ export const BluetoothTestSEmgModal = () => {
               <RenderBluetoothTestSEmgModalState
                 modalState={modalState}
                 triggerDettected={triggerDettected}
-                onChangeSEmgDificulty={onChangeSEmgDificulty}
+                onChangeSEmgDificulty={(value)=>onChange(value, NeuraXBluetoothProtocolBodyPropertyEnum.DIFFICULTY)}
                 fesParams={fesParams}
               />
             </View>

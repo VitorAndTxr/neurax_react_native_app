@@ -1,5 +1,5 @@
 import React from 'react';
-import { H2, LoginTextLabel, PrimaryButton, RegularButtonText } from '../../screens/BaseViewStyles';
+import { H2, LoginTextLabel, PrimaryButton, RegularButtonText } from '../BaseViewStyles';
 import { Modal, SafeAreaView } from 'react-native';
 import { useBluetoothContext } from '../../context/BluetoothContext';
 import styled from 'styled-components/native';

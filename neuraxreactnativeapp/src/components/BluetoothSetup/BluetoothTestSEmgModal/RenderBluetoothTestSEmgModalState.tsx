@@ -1,9 +1,9 @@
 import React from 'react';
-import { InputLabel, RegularButtonText } from '../../screens/BaseViewStyles';
+import { InputLabel, RegularButtonText } from '../../BaseViewStyles';
 import { View } from 'react-native';
 import Slider from "react-native-a11y-slider";
 import { BluetoothTestSEmgModalState } from './BluetoothTestSEmgModal';
-import { NeuraXBluetoothProtocolBodyPropertyEnum, NeuraXBluetoothProtocolFEsStimuliBody } from '../../context/BluetoothContext';
+import { NeuraXBluetoothProtocolBodyPropertyEnum, NeuraXBluetoothProtocolFEsStimuliBody } from '../../../context/BluetoothContext';
 
 export function RenderBluetoothTestSEmgModalState(
   {

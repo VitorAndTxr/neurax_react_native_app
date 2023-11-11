@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ScrollView, SafeAreaView } from 'react-native';
-import { LoginTextLabel } from '../../screens/BaseViewStyles';
+import { LoginTextLabel } from '../BaseViewStyles';
 import { useBluetoothContext } from '../../context/BluetoothContext';
 import styled from 'styled-components/native';
 

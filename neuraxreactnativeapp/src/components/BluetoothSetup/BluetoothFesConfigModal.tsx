@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { H2, InputLabel, PrimaryButton, RegularButtonText } from '../../screens/BaseViewStyles';
+import { H2, InputLabel, PrimaryButton, RegularButtonText } from '../BaseViewStyles';
 import { Modal, View, SafeAreaView, ScrollView } from 'react-native';
 import { useBluetoothContext, NeuraXBluetoothProtocolFEsStimuliBody, NeuraXBluetoothProtocolBodyPropertyEnum } from '../../context/BluetoothContext';
 import { ModalContainer, ModalContent } from './BluetoothConnectionErrorModal';
@@ -13,11 +13,7 @@ export const BluetoothFesConfigModal = () => {
     showFesTestModal, setShowFesTestModal,
     fesParams, testFes,
 
-    onChangeFesAmplitude,
-    onChangeFesPulseWidth,
-    onChangeFesFrequency,
-    onChangeFesStimuliDuration
-
+    onChange
   } = useBluetoothContext();
 
 
@@ -53,7 +49,7 @@ export const BluetoothFesConfigModal = () => {
                       color: '#08415C',
                       fontSize: 15
                     }}
-                    onChange={onChangeFesAmplitude}
+                    onChange={(value: number[])=>onChange(value, NeuraXBluetoothProtocolBodyPropertyEnum.AMPLITUDE)}
                     />
                   <InputLabel>
                     12V
@@ -81,7 +77,7 @@ export const BluetoothFesConfigModal = () => {
                     labelStyle={{}}
                     style={{ width: 220 }}
                     values={[(fesParams[NeuraXBluetoothProtocolBodyPropertyEnum.PULSE_WIDTH]!)]}
-                    onChange={onChangeFesPulseWidth}/>
+                    onChange={(value: number[])=>onChange(value, NeuraXBluetoothProtocolBodyPropertyEnum.PULSE_WIDTH)}/>
                   <InputLabel>
                     1000us
                   </InputLabel>
@@ -106,7 +102,7 @@ export const BluetoothFesConfigModal = () => {
                     }}
                     style={{ width: 230 }}
                     values={[(fesParams[NeuraXBluetoothProtocolBodyPropertyEnum.FREQUENCY]!)]}
-                    onChange={onChangeFesFrequency}/>
+                    onChange={(value: number[])=>onChange(value, NeuraXBluetoothProtocolBodyPropertyEnum.FREQUENCY)}/>
                   <InputLabel>
                     90Hz
                   </InputLabel>
@@ -132,7 +128,7 @@ export const BluetoothFesConfigModal = () => {
                     labelStyle={{}}
                     style={{ width: 250 }}
                     values={[(fesParams[NeuraXBluetoothProtocolBodyPropertyEnum.STIMULI_DURATION]!)]}
-                    onChange={onChangeFesStimuliDuration}/>
+                    onChange={(value: number[])=>onChange(value, NeuraXBluetoothProtocolBodyPropertyEnum.STIMULI_DURATION)}/>
                   <InputLabel>
                     10s
                   </InputLabel>
@@ -140,7 +136,6 @@ export const BluetoothFesConfigModal = () => {
               </View>
               <Divider style={{ marginVertical: 5 }} />
             </ScrollView>
-
             <PrimaryButton onPress={() => {testFes() }}>
               <RegularButtonText>
                 Testar FES

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, PermissionsAndroid } from 'react-native';
 import { useAuthContext } from '../../framework/auth/AuthContextProvider';
 import { UserProfileEnum } from '../../framework/domain/enum/UserProfileEnum';
-import { BaseViewStyles, BigButtonText, LoggedViewStyles, LoginButton, PrimaryButton, PrimaryGreenButton, PrimaryRedButton, RegularButtonText } from './BaseViewStyles';
+import { BaseViewStyles, BigButtonText, LoggedViewStyles, LoginButton, PrimaryButton, PrimaryGreenButton, PrimaryRedButton, RegularButtonText } from '../components/BaseViewStyles';
 import { useStackNavigatorContext } from '../routes/StackNavigatorProvider';
 import styled from 'styled-components';
 

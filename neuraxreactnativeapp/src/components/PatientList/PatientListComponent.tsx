@@ -1,6 +1,6 @@
 import { View, ScrollView, SafeAreaView, Text } from 'react-native';
 import styled from 'styled-components/native';
-import { H3, LoginTextLabel, PrimaryButton, RegularButtonText, PrimaryGreenButton } from '../../screens/BaseViewStyles';
+import { H3, LoginTextLabel, PrimaryButton, RegularButtonText, PrimaryGreenButton } from '../BaseViewStyles';
 import { useTherapistContext } from '../../context/TherapistContext';
 import { useStackNavigatorContext } from '../../routes/StackNavigatorProvider';
 

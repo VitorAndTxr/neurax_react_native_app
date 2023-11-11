@@ -29,12 +29,6 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
     const [btDataRecieveSubscription, setBtDataRecieveSubscription] = useState<BluetoothEventSubscription>()
     const [btDeviceDisconnectSubscription, setBtDeviceDisconnectSubscription] = useState<BluetoothEventSubscription>()
 
-
-
-    const [showConnectionErrorModal, setShowConnectionErrorModal] = useState(false)
-    const [showFesTestModal, setShowFesTestModal] = useState(false)
-    const [showSEmgTestModal, setShowSEmgTestModal] = useState(false)
-    const [triggerDettected, setTriggerDetected] = useState(false)
     const [fesParams, setFesParams] = useState<NeuraXBluetoothProtocolFEsStimuliBody>({
         [NeuraXBluetoothProtocolBodyPropertyEnum.AMPLITUDE]:            7,
         [NeuraXBluetoothProtocolBodyPropertyEnum.FREQUENCY]:            60,
@@ -43,12 +37,16 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
         [NeuraXBluetoothProtocolBodyPropertyEnum.STIMULI_DURATION]:     2
     })
 
+    const [triggerDettected, setTriggerDetected] = useState(false)
 
-    
+    const [wristAmplitude, setWristAmplitude] = useState(0)
 
-    function closeFesTestModal() {
-        setShowFesTestModal(false)
-    }
+
+    const [showConnectionErrorModal, setShowConnectionErrorModal] = useState(false)
+    const [showFesTestModal, setShowFesTestModal] = useState(false)
+    const [showSEmgTestModal, setShowSEmgTestModal] = useState(false)
+    const [showTestGyroscopeModal, setShowTestGyroscopeModal] = useState(false)
+
 
 
     useEffect(()=>{
@@ -67,21 +65,6 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
 
     },[selectedDevice])
 
-    useEffect(()=>{
-        const backAction = () => {
-            closeFesTestModal(); // Close the modal
-            return true; // Prevent default behavior (app exit)
-        };
-        
-        const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
-
-        return () => {
-          backHandler.remove(); // Remove the event listener when the component unmounts
-        };
-    
-    },[setShowFesTestModal])
-
-
     async function initBluetooth() {
         try{
             let BTEnabled = await RNBluetoothClassic.requestBluetoothEnabled()
@@ -92,10 +75,9 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
             }
         }catch(error){
             console.error(error)
-        }
-            
-        
+        }  
     }
+
     async function verifyCurrentConnection(address:string){
         try {             
             let response = await RNBluetoothClassic.isDeviceConnected(address)
@@ -248,47 +230,12 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
         
     }
 
-    function onChangeFesAmplitude(values:number[]):void{
-        setFesParams(currentParams =>{                        
-          return {
-            ...currentParams,
-            [NeuraXBluetoothProtocolBodyPropertyEnum.AMPLITUDE] :values[0]
-          }
-        })
-      }
-    
-    function onChangeFesPulseWidth(values:number[]):void{
-        setFesParams(currentParams =>{                        
-            return {
-            ...currentParams,
-            [NeuraXBluetoothProtocolBodyPropertyEnum.PULSE_WIDTH] :values[0]
-            }
-        })
-    }
 
-    function onChangeFesFrequency(values:number[]):void{
+    function onChange(values:number[], property:NeuraXBluetoothProtocolBodyPropertyEnum):void{
         setFesParams(currentParams =>{                        
             return {
             ...currentParams,
-            [NeuraXBluetoothProtocolBodyPropertyEnum.FREQUENCY] :values[0]
-            }
-        })
-    }
-
-    function onChangeFesStimuliDuration(values:number[]):void{
-        setFesParams(currentParams =>{                        
-            return {
-            ...currentParams,
-            [NeuraXBluetoothProtocolBodyPropertyEnum.STIMULI_DURATION] :values[0]
-            }
-        })
-    }
-
-    function onChangeSEmgDificulty(values:number[]):void{
-        setFesParams(currentParams =>{                        
-            return {
-            ...currentParams,
-            [NeuraXBluetoothProtocolBodyPropertyEnum.DIFFICULTY] :values[0]
+            [property]:values[0]
             }
         })
     }
@@ -309,6 +256,8 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
                 showSEmgTestModal, setShowSEmgTestModal,
                 triggerDettected, setTriggerDetected,
                 fesParams, setFesParams,
+                showTestGyroscopeModal,setShowTestGyroscopeModal,
+                wristAmplitude, setWristAmplitude,
 
                 selectedDevice,
                 setSelectedDevice,
@@ -317,11 +266,7 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
                 initBluetooth,
                 openBluetoothSettings,
 
-                onChangeFesAmplitude,
-                onChangeFesPulseWidth,
-                onChangeFesFrequency,
-                onChangeFesStimuliDuration,
-                onChangeSEmgDificulty,
+                onChange,
                 testFes,
 
                 disconnect
@@ -356,19 +301,22 @@ interface BluetoothContextData {
     showSEmgTestModal:boolean
     setShowSEmgTestModal:React.Dispatch<React.SetStateAction<boolean>>
 
+    showTestGyroscopeModal:boolean
+    setShowTestGyroscopeModal:React.Dispatch<React.SetStateAction<boolean>>
+
+    wristAmplitude:number
+    setWristAmplitude:React.Dispatch<React.SetStateAction<number>>
+
     fesParams:NeuraXBluetoothProtocolFEsStimuliBody
     setFesParams:React.Dispatch<React.SetStateAction<NeuraXBluetoothProtocolFEsStimuliBody>>
 
-    disconnect:(address:string)=>void
-    openBluetoothSettings:()=>void
-    initBluetooth:()=>void
-    connectBluetooth:(address:string)=>void
+    disconnect:(address:string) => void
+    openBluetoothSettings:() => void
+    initBluetooth:() => void
+    connectBluetooth:(address:string) => void
 
-    onChangeFesAmplitude:(values:number[])=>void
-    onChangeFesPulseWidth:(values:number[])=>void
-    onChangeFesFrequency:(values:number[])=>void
-    onChangeFesStimuliDuration:(values:number[])=>void
-    onChangeSEmgDificulty:(values:number[])=>void
+    onChange:(values:number[], property:NeuraXBluetoothProtocolBodyPropertyEnum) => void
+
     testFes:()=>void
 }
 

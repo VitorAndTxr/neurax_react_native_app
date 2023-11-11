@@ -7,12 +7,13 @@ import { TherapistContextProvider } from '../context/TherapistContext';
 
 import React from 'react';
 
-
 export function Routes(){
     const{ 
         userProfile,
     } =  useAuthContext()
+
     switch(userProfile){
+        
         case UserProfileEnum.Theraphist:
             return(
             <StackNavigatorContextProvider InitialScreen='Home'>
@@ -23,6 +24,7 @@ export function Routes(){
                 </BluetoothContextProvider>
             </StackNavigatorContextProvider>
             )
+
         case UserProfileEnum.Patient:
             return(
             <>

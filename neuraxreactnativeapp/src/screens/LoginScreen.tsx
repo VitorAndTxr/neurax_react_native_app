@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BigButtonText, H1,LoginButton, LoginTextLabel, LoginViewStyles, StyledTextInput } from './BaseViewStyles';
+import { BigButtonText, H1,LoginButton, LoginTextLabel, LoginViewStyles, StyledTextInput } from '../components/BaseViewStyles';
 import { useLoginScreenContext } from '../context/LoginScreenContext';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useAuthContext } from '../../framework/auth/AuthContextProvider';
