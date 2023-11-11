@@ -3,9 +3,10 @@ import styled from 'styled-components/native';
 import { H3, LoginTextLabel, PrimaryButton, RegularButtonText, PrimaryGreenButton, PrimaryRedButton } from '../BaseViewStyles';
 import { useTherapistContext } from '../../context/TherapistContext';
 import { useStackNavigatorContext } from '../../routes/StackNavigatorProvider';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 export function PatientDetailsComponent() {
-  const {selectedPatient} = useTherapistContext();
+  const {selectedPatient, isLoading, onPressEditPatient} = useTherapistContext();
   const patient = selectedPatient;
   
   const { push } = useStackNavigatorContext()
@@ -95,7 +96,7 @@ export function PatientDetailsComponent() {
                         </CustomPrimaryGreenButton>
                         <CustomPrimaryButton
                             activeOpacity={1}
-                            onPress={()=>push('PatientList')}>
+                            onPress={()=>{onPressEditPatient()}}>
                             <RegularButtonText  style={{fontSize:20}}>
                                 Editar Informações
                             </RegularButtonText>
@@ -108,6 +109,15 @@ export function PatientDetailsComponent() {
                             </RegularButtonText>
                         </CustomPrimaryRedButton>
                 </View>
+                <Spinner
+                    visible={isLoading}
+                    textContent={'Carregando...'}
+                    color='#08415C'
+                    overlayColor='#C6EAFA'
+                    textStyle={{ color: '#08415C' }}
+                    size={"large"}
+                    
+                />
         </ScrollView>
       </SafeAreaView>
     </View>

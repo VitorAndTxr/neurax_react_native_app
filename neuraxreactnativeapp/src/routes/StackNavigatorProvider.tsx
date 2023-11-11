@@ -33,7 +33,7 @@ export function StackNavigatorContextProvider(props: StackNavigatorContextProvid
     return (
         <>
             <StackNavigatorContext.Provider value={{
-                push,
+                push, pop,
                 currentScreen
             }}>
                 {
@@ -49,6 +49,7 @@ export function useStackNavigatorContext() {
 }
 
 interface StackNavigatorContextData {
+    pop:() => void,
     push:(route: string) => void,
     currentScreen:string
 }

@@ -6,6 +6,7 @@ import TokenService from '../../framework/auth/TokenService';
 import PatientService from '../services/PatientService';
 import { PatientListViewModel } from '../domain/models/PatientListViewModel';
 import { PatientViewModel } from '../domain/models/PatientViewModel';
+import { useStackNavigatorContext } from '../routes/StackNavigatorProvider';
 
 const patientService = new PatientService();
 
@@ -17,12 +18,39 @@ interface TherapistContextProviderProps {
 
 export function TherapistContextProvider(props: TherapistContextProviderProps) {
 
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const {getDecodedToken} = useAuthContext();
+    const {push, pop} = useStackNavigatorContext();
     const [patients, setPatients] = useState<PatientListViewModel[]>([])
 
     
     const [selectedPatient, setSelectedPatient] = useState<PatientViewModel>({} as PatientViewModel);
 
+    const [patientId, setPatientId] = useState('');
+
+    const [patientForm, setPatientForm] = useState<PatientFormBody>({
+        therapistId: '',
+        birthDate: undefined,
+        [PatientFormPropertyEnum.LOGIN]: '',
+        [PatientFormPropertyEnum.NAME]: '',
+        [PatientFormPropertyEnum.EMAIL]: '',
+        [PatientFormPropertyEnum.PHONE]: '',
+        [PatientFormPropertyEnum.CARETAKER_NAME]: '',
+        [PatientFormPropertyEnum.CARETAKER_PHONE] : '',
+    })
+
     useEffect(()=>{
+        getDecodedToken().then((result) => {
+            setPatientForm(currentParams =>{                        
+                return {
+                ...currentParams,
+                therapistId:result?.sub
+                }
+            })
+        })
+        
         getPatients()
     },[])
 
@@ -39,9 +67,9 @@ export function TherapistContextProvider(props: TherapistContextProviderProps) {
         })
     }
 
-    function getPatientById(guid: string){
+    async function getPatientById(guid: string){
 
-        patientService.getPatientById(guid)
+        await patientService.getPatientById(guid)
         .then((response)=>{
             if(response?.success){
                 console.log(response.result)
@@ -53,21 +81,120 @@ export function TherapistContextProvider(props: TherapistContextProviderProps) {
         })
     }
     
-    const [patientId, setPatientId] = useState('');
+    
     useEffect(()=>{
-        console.log("setou paciente id");
-        console.log(patientId);
         if(patientId != ''){
-            console.log("chama update paciente");
             getPatientById(patientId);
         }
         
     },[patientId])
 
+    async function onSelectPatient(id: string){
+        setIsLoading(true)
+        await getPatientById(id);
+        setIsLoading(false)
+        push('PatientDetails')
+    }
+
+    function onChangeStringsPatientForm(value:string, property:PatientFormPropertyEnum):void{
+        setPatientForm(currentParams =>{                        
+            return {
+            ...currentParams,
+            [property]:value
+            }
+        })
+    }
+
+    function onChangeDateBirthPatientForm(value:Date):void{
+        setPatientForm(currentParams =>{                        
+            return {
+            ...currentParams,
+            birthDate:value
+            }
+        })
+    }
+
+    function onPressEditPatient(){
+        setIsEditing(true);
+        setPatientForm(currentParams => {
+            return {
+                ...currentParams,
+                id: selectedPatient.id,
+                login: selectedPatient.login,
+                name: selectedPatient.name,
+                email: selectedPatient.email,
+                birthDate: new Date(selectedPatient.birthDate),
+                phone: selectedPatient.phone,
+                caretakerName: selectedPatient.caretakerName,
+                caretakerPhone: selectedPatient.caretakerPhone
+            }
+        })
+
+        push('NewPatient')
+    }
+
+    function resetPatientForm(): void{
+        setPatientForm(currentParams =>{                        
+            return {
+            ...currentParams,
+            id: '',
+            login: '',
+            name: '',
+            email: '',
+            birthDate:undefined,
+            phone: '',
+            caretakerName: '',
+            caretakerPhone: ''
+            }
+        })
+    }
+
+    async function onSavePatient(){
+        setIsLoading(true);
+
+        if(isEditing){
+            console.log("editar paciente")
+            console.log(patientForm);
+
+            await patientService.editPatient(patientForm)
+            .then((response)=>{
+                if(response?.success){
+                    console.log(response.result)
+                    setSelectedPatient(response.result)
+                    getPatients()
+                }
+            })
+            .catch((response)=>{
+
+            })
+        }else{
+            console.log("criar paciente")
+            console.log(patientForm);
+
+            await patientService.createPatient(patientForm)
+            .then((response)=>{
+                if(response?.success){
+                    console.log(response.result)
+                    setSelectedPatient(response.result)
+                    getPatients()
+                }
+            })
+            .catch((response)=>{
+
+            })
+        }
+        
+        setIsEditing(false)
+        pop()
+        setIsLoading(false)
+        push('PatientDetails')
+    }
+
     return (
         <>
             <TherapistContext.Provider value={{
-                patients, patientId, setPatientId, selectedPatient
+                patients, patientId, setPatientId, selectedPatient, patientForm, onChangeStringsPatientForm, isLoading, onSelectPatient,
+                onChangeDateBirthPatientForm, resetPatientForm, onSavePatient, isEditing, setIsEditing, onPressEditPatient
 
             }}>
                 {props.children}
@@ -85,4 +212,39 @@ interface TherapistContextData {
   patientId:string;
   setPatientId: React.Dispatch<React.SetStateAction<string>>;
   selectedPatient: PatientViewModel;
+
+  patientForm: PatientFormBody;
+  isLoading:boolean
+  isEditing:boolean
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>
+
+  onChangeStringsPatientForm:(value:string, property:PatientFormPropertyEnum) => void
+  onChangeDateBirthPatientForm:(value:Date) => void
+
+  onSelectPatient:(id:string) => void
+  resetPatientForm:() => void
+  onSavePatient:() => void // ação ao editar ou criar paciente
+  onPressEditPatient:() => void //chama tela editar paciente
+}
+
+export enum PatientFormPropertyEnum{
+    LOGIN = 'login',
+    NAME = 'name',
+    EMAIL = 'email',
+    PHONE = 'phone',
+    CARETAKER_NAME = 'caretakerName',
+    CARETAKER_PHONE =  'caretakerPhone',
+}
+
+export type PatientFormBody = {
+    id: string | undefined,
+    therapistId: string | undefined,
+    birthDate: Date | undefined,
+    [PatientFormPropertyEnum.LOGIN]: string | undefined,
+    [PatientFormPropertyEnum.NAME]: string | undefined,
+    [PatientFormPropertyEnum.EMAIL]: string | undefined,
+    [PatientFormPropertyEnum.PHONE]: string | undefined,
+    [PatientFormPropertyEnum.CARETAKER_NAME]: string | undefined,
+    [PatientFormPropertyEnum.CARETAKER_PHONE] :string | undefined,
+    
 }

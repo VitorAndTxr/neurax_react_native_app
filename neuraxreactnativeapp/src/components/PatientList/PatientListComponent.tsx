@@ -5,7 +5,7 @@ import { useTherapistContext } from '../../context/TherapistContext';
 import { useStackNavigatorContext } from '../../routes/StackNavigatorProvider';
 
 export function PatientListComponent() {
-  const {patients, setPatientId} = useTherapistContext();
+  const {patients, setPatientId, onSelectPatient, resetPatientForm, setIsEditing} = useTherapistContext();
   const renderedPatients = [...patients];
   
   const { push } = useStackNavigatorContext()
@@ -17,7 +17,7 @@ export function PatientListComponent() {
     <View style={{ flexDirection: "row" }}>
       <View style={{justifyContent: 'center'}}><H3 style={{marginBottom: 0}}>Lista de Pacientes</H3></View>
     
-    <PrimaryGreenButton style={{marginStart:'auto'}} activeOpacity={1} onPress={() => {push('NewPatient')}}>
+    <PrimaryGreenButton style={{marginStart:'auto'}} activeOpacity={1} onPress={() => {setIsEditing(false), resetPatientForm(), push('NewPatient')}}>
       <Text>+</Text>
     </PrimaryGreenButton>
     </View>
@@ -31,7 +31,7 @@ export function PatientListComponent() {
         <ScrollView>
           {renderedPatients.map((patient) => {
             return (
-              <CardStyle key={patient.id} onPress={() => {setPatientId(patient.id); push('PatientDetails')}}>
+              <CardStyle key={patient.id} onPress={() => {onSelectPatient(patient.id)}}>
                 
                 <View style={{ flexDirection: "row" }}>
                   <LoginTextLabel>Nome:</LoginTextLabel>

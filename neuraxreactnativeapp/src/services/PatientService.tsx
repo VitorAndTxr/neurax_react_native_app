@@ -5,6 +5,7 @@ import ApiResponse from "../../framework/domain/api/ApiResponse";
 import ApiInterface from "../../framework/interface/ApiInterface";
 import { PatientListViewModel } from "../domain/models/PatientListViewModel";
 import { PatientViewModel } from "../domain/models/PatientViewModel";
+import { PatientFormBody } from "../context/TherapistContext";
 
 
 export default class PatientService {
@@ -22,6 +23,26 @@ export default class PatientService {
         try {
             let endpoint = `/Patient/${id}`;
             let response: AxiosResponse<ApiResponse<PatientViewModel>> = await ApiInterface.get(endpoint);
+            return response.data;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    public async createPatient(payload: PatientFormBody): Promise<ApiResponse<PatientViewModel> | undefined> {
+        try {
+            let endpoint = `/Therapist/CreatePatient`;
+            let response: AxiosResponse<ApiResponse<PatientViewModel>> = await ApiInterface.post(endpoint, payload);
+            return response.data;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    public async editPatient(payload: PatientFormBody): Promise<ApiResponse<PatientViewModel> | undefined> {
+        try {
+            let endpoint = `/Therapist/EditPatient`;
+            let response: AxiosResponse<ApiResponse<PatientViewModel>> = await ApiInterface.put(endpoint, payload);
             return response.data;
         } catch (error) {
             console.error(error);
