@@ -18,7 +18,7 @@ interface TherapistContextProviderProps {
 
 export function TherapistContextProvider(props: TherapistContextProviderProps) {
 
-
+    const [showDeletePatientModal, setShowDeletePatientModal] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const {getDecodedToken} = useAuthContext();
@@ -190,11 +190,35 @@ export function TherapistContextProvider(props: TherapistContextProviderProps) {
         push('PatientDetails')
     }
 
+    async function onDeletePatient(){
+        setShowDeletePatientModal(false);
+        setIsLoading(true);
+
+   
+        console.log("deletar paciente")
+
+        console.log(selectedPatient.id);
+        await patientService.deletePatient(selectedPatient.id)
+            .then((response)=>{
+                if(response?.success){
+                    console.log(response.result)
+                    getPatients()
+                }
+            })
+            .catch((response)=>{
+
+            })
+        
+        pop()
+        setIsLoading(false)
+    }
+
     return (
         <>
             <TherapistContext.Provider value={{
                 patients, patientId, setPatientId, selectedPatient, patientForm, onChangeStringsPatientForm, isLoading, onSelectPatient,
-                onChangeDateBirthPatientForm, resetPatientForm, onSavePatient, isEditing, setIsEditing, onPressEditPatient
+                onChangeDateBirthPatientForm, resetPatientForm, onSavePatient, isEditing, setIsEditing, onPressEditPatient,
+                showDeletePatientModal, setShowDeletePatientModal, onDeletePatient
 
             }}>
                 {props.children}
@@ -218,12 +242,16 @@ interface TherapistContextData {
   isEditing:boolean
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>
 
+  showDeletePatientModal:boolean
+  setShowDeletePatientModal:React.Dispatch<React.SetStateAction<boolean>>
+
   onChangeStringsPatientForm:(value:string, property:PatientFormPropertyEnum) => void
   onChangeDateBirthPatientForm:(value:Date) => void
 
   onSelectPatient:(id:string) => void
   resetPatientForm:() => void
   onSavePatient:() => void // ação ao editar ou criar paciente
+  onDeletePatient:() => void // ação ao editar ou criar paciente
   onPressEditPatient:() => void //chama tela editar paciente
 }
 

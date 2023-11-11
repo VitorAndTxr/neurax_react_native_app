@@ -4,9 +4,10 @@ import { H3, LoginTextLabel, PrimaryButton, RegularButtonText, PrimaryGreenButto
 import { useTherapistContext } from '../../context/TherapistContext';
 import { useStackNavigatorContext } from '../../routes/StackNavigatorProvider';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { DeletePatientModal } from './DeletePatientModal';
 
 export function PatientDetailsComponent() {
-  const {selectedPatient, isLoading, onPressEditPatient} = useTherapistContext();
+  const {selectedPatient, isLoading, onPressEditPatient, showDeletePatientModal, setShowDeletePatientModal} = useTherapistContext();
   const patient = selectedPatient;
   
   const { push } = useStackNavigatorContext()
@@ -103,7 +104,7 @@ export function PatientDetailsComponent() {
                         </CustomPrimaryButton>
                         <CustomPrimaryRedButton
                             activeOpacity={1}
-                            onPress={()=>push('PatientList')}>
+                            onPress={()=>setShowDeletePatientModal(true)}>
                             <RegularButtonText  style={{fontSize:20}}>
                                 Excluir Paciente
                             </RegularButtonText>
@@ -118,6 +119,11 @@ export function PatientDetailsComponent() {
                     size={"large"}
                     
                 />
+                {
+                  showDeletePatientModal
+                  &&
+                  <DeletePatientModal/>
+                }
         </ScrollView>
       </SafeAreaView>
     </View>

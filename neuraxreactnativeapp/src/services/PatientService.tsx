@@ -49,4 +49,14 @@ export default class PatientService {
         }
     }
 
+    public async deletePatient(id: string): Promise<ApiResponse<boolean> | undefined> {
+        try {
+            let endpoint = `/Therapist/DeletePatient/${id}`;
+            let response: AxiosResponse<ApiResponse<boolean>> = await ApiInterface.delete(endpoint);
+            return response.data;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
 }
