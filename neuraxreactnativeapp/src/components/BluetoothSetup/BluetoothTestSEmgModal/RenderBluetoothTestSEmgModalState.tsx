@@ -77,5 +77,4 @@ interface RenderBluetoothTestSEmgModalStateProps {
   triggerDettected: boolean;
   onChangeSEmgDificulty:(values:number[])=>void
   fesParams:NeuraXBluetoothProtocolFEsStimuliBody
-
 }

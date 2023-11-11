@@ -5,13 +5,25 @@ import { useTherapistContext } from '../../context/TherapistContext';
 import { useStackNavigatorContext } from '../../routes/StackNavigatorProvider';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { DeletePatientModal } from './DeletePatientModal';
+import React from 'react';
+import { PatientSessionParametersModal } from './Patient/PatientSessionParametersModal';
 
 export function PatientDetailsComponent() {
-  const {selectedPatient, isLoading, onPressEditPatient, showDeletePatientModal, setShowDeletePatientModal} = useTherapistContext();
+  const {
+    selectedPatient, 
+    isLoading, 
+    onPressEditPatient, 
+    showDeletePatientModal, 
+    setShowDeletePatientModal,
+    setShowPatientSessionParameterModal,
+    showPatientSessionParameterModal
+  } = useTherapistContext();
+
   const patient = selectedPatient;
   
   const { push } = useStackNavigatorContext()
-  return (<View style={{
+  return (
+  <View style={{
     justifyContent: 'center',
     flexDirection: 'col',
     marginTop:'300px',
@@ -83,7 +95,7 @@ export function PatientDetailsComponent() {
                         </CustomPrimaryButton>
                         <CustomPrimaryButton
                             activeOpacity={1}
-                            onPress={()=>push('PatientList')}>
+                            onPress={()=>setShowPatientSessionParameterModal(true)}>
                             <RegularButtonText  style={{fontSize:20}}>
                                 Parâmetros
                             </RegularButtonText>
@@ -124,9 +136,15 @@ export function PatientDetailsComponent() {
                   &&
                   <DeletePatientModal/>
                 }
+                                {
+                  showPatientSessionParameterModal
+                  &&
+                  <PatientSessionParametersModal/>
+                }
         </ScrollView>
       </SafeAreaView>
     </View>
+    <PatientSessionParametersModal/>
   </View>);
 }
 

@@ -1,12 +1,12 @@
 import {
     BaseViewStyles, LoggedViewStyles
   } from '../components/BaseViewStyles';
-  import { PatientListComponent } from '../components/PatientList/PatientListComponent';
-  import { TherapistContextProvider } from '../context/TherapistContext';
 import { PatientDetailsComponent } from '../components/PatientList/PatientDetailsComponent';
+import React from 'react';
   
   export function PatientDetailsScreen() {
-    return (<BaseViewStyles>
+    return (
+    <BaseViewStyles>
       <LoggedViewStyles style={{ flex: 1}}>
           <PatientDetailsComponent/>
       </LoggedViewStyles>

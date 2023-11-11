@@ -19,6 +19,9 @@ interface TherapistContextProviderProps {
 export function TherapistContextProvider(props: TherapistContextProviderProps) {
 
     const [showDeletePatientModal, setShowDeletePatientModal] = useState(false);
+
+    const [showPatientSessionParameterModal, setShowPatientSessionParameterModal] = useState(false);
+
     const [isLoading, setIsLoading] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const {getDecodedToken} = useAuthContext();
@@ -31,6 +34,7 @@ export function TherapistContextProvider(props: TherapistContextProviderProps) {
     const [patientId, setPatientId] = useState('');
 
     const [patientForm, setPatientForm] = useState<PatientFormBody>({
+        id:'',
         therapistId: '',
         birthDate: undefined,
         [PatientFormPropertyEnum.LOGIN]: '',
@@ -38,7 +42,8 @@ export function TherapistContextProvider(props: TherapistContextProviderProps) {
         [PatientFormPropertyEnum.EMAIL]: '',
         [PatientFormPropertyEnum.PHONE]: '',
         [PatientFormPropertyEnum.CARETAKER_NAME]: '',
-        [PatientFormPropertyEnum.CARETAKER_PHONE] : '',
+        [PatientFormPropertyEnum.CARETAKER_PHONE] : ''
+    
     })
 
     useEffect(()=>{
@@ -213,12 +218,20 @@ export function TherapistContextProvider(props: TherapistContextProviderProps) {
         setIsLoading(false)
     }
 
+
+
     return (
         <>
             <TherapistContext.Provider value={{
-                patients, patientId, setPatientId, selectedPatient, patientForm, onChangeStringsPatientForm, isLoading, onSelectPatient,
+                patients, 
+                patientId, setPatientId, 
+                showPatientSessionParameterModal, setShowPatientSessionParameterModal,
+                selectedPatient, onSelectPatient,
+                patientForm, 
+                onChangeStringsPatientForm, 
+                isLoading, 
                 onChangeDateBirthPatientForm, resetPatientForm, onSavePatient, isEditing, setIsEditing, onPressEditPatient,
-                showDeletePatientModal, setShowDeletePatientModal, onDeletePatient
+                showDeletePatientModal, setShowDeletePatientModal, onDeletePatient,
 
             }}>
                 {props.children}
@@ -239,8 +252,13 @@ interface TherapistContextData {
 
   patientForm: PatientFormBody;
   isLoading:boolean
+
   isEditing:boolean
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>
+
+  showPatientSessionParameterModal:boolean
+  setShowPatientSessionParameterModal:React.Dispatch<React.SetStateAction<boolean>>
+
 
   showDeletePatientModal:boolean
   setShowDeletePatientModal:React.Dispatch<React.SetStateAction<boolean>>

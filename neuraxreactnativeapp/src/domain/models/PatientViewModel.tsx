@@ -1,3 +1,5 @@
+import { SessionParametersViewModel } from "./SessionParametersViewModel";
+
 export interface PatientViewModel {
     id: string;
     login: string;
@@ -7,4 +9,8 @@ export interface PatientViewModel {
     phone: string;
     caretakerName: string;
     caretakerPhone: string;
+    parameters:SessionParametersViewModel
+
 }
+
+
