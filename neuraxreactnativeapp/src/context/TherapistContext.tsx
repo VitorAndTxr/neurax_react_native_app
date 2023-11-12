@@ -292,5 +292,4 @@ export type PatientFormBody = {
     [PatientFormPropertyEnum.PHONE]: string | undefined,
     [PatientFormPropertyEnum.CARETAKER_NAME]: string | undefined,
     [PatientFormPropertyEnum.CARETAKER_PHONE] :string | undefined,
-    
 }

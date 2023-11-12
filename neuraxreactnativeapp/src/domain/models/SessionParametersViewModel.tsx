@@ -5,5 +5,5 @@ export interface SessionParametersViewModel {
     minPulseWidth: number;
     maxPulseWidth: number;
     pulseDuration: number;
-    repetitions: number;
 }
+

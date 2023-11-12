@@ -24,9 +24,8 @@ export const PatientSessionParametersModal = () => {
     minPulseWidth:100,
     maxPulseWidth:300,
     frequency:60,
-    pulseDuration:2,
-    repetitions:4
-  } )
+    pulseDuration:2
+  })
 
   function savePatientSessionParams(){
     console.log(patientParams);
