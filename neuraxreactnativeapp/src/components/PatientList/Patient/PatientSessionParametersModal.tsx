@@ -170,32 +170,6 @@ export const PatientSessionParametersModal = () => {
                 </View>
               </View>
               <Divider style={{ marginVertical: 5 }} />
-              <View style={{ flexDirection: 'col', width: 330, justifyContent: 'center', alignItems: 'center' }}>
-                <InputLabel style={{ marginVertical: 10 }}>
-                  Repetições:
-                </InputLabel>
-                <View style={{ flexDirection: 'row', width: 300, height: 'auto', justifyContent: 'center', alignItems: 'center', paddingBottom: 15 }}>
-                  <InputLabel>
-                    1
-                  </InputLabel>
-                  <Slider
-                    min={3}
-                    max={30}
-                    increment={1}
-                    labelTextStyle={{
-                      color: '#08415C',
-                      fontSize: 15
-                    }}
-                    labelStyle={{}}
-                    style={{ width: 250 }}
-                    values={[(patientParams.repetitions)]}
-                    onChange={(value: number[]) => onChange(value, 'repetitions')} />
-                  <InputLabel>
-                    30
-                  </InputLabel>
-                </View>
-              </View>
-              <Divider style={{ marginVertical: 5 }} />
             </ScrollView>
             <View style={{flexDirection:'row', flex:1, paddingVertical:20}}>
               <View style={{flex:1, padding:4}}>
