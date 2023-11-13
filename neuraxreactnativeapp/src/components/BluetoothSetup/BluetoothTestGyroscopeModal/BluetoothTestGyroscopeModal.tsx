@@ -4,6 +4,7 @@ import { Modal } from 'react-native';
 import {  useBluetoothContext } from '../../../context/BluetoothContext';
 import { ModalContainer, ModalContent } from '../BluetoothConnectionErrorModal';
 import { BluetoothTestGyroscopeContentModal } from './BluetoothTestGyroscopeContentModal';
+import { GyroscopeMeasurementStateEnum } from '../../../domain/enum/GyroscopeMeasurementStateEnum';
 
 export const BluetoothTestGyroscopeModal = () => {
   const {
@@ -14,15 +15,15 @@ export const BluetoothTestGyroscopeModal = () => {
 
   const gyroscopeMeasurementTimeMS = 10000
 
-  const [modalState, setModalState] = useState<BluetoothTestGyroscopeModalState>(BluetoothTestGyroscopeModalState.Instructions);
+  const [modalState, setModalState] = useState<GyroscopeMeasurementStateEnum>(GyroscopeMeasurementStateEnum.Instructions);
   const [measurementTimeout, setMeasurementTimeout] = useState<NodeJS.Timeout|undefined>();
 
   useEffect(()=>{
-    if(modalState===BluetoothTestGyroscopeModalState.Measuring){
+    if(modalState===GyroscopeMeasurementStateEnum.Measuring){
 
       const timeOut = setTimeout(
       ()=>{
-        setModalState(BluetoothTestGyroscopeModalState.FinalResults)
+        setModalState(GyroscopeMeasurementStateEnum.FinalResults)
       }
       , gyroscopeMeasurementTimeMS)
 
@@ -31,17 +32,17 @@ export const BluetoothTestGyroscopeModal = () => {
   },[modalState])
 
   function initMeasurement() {
-    setModalState(BluetoothTestGyroscopeModalState.Measuring)
+    setModalState(GyroscopeMeasurementStateEnum.Measuring)
   }
 
   function cancelMeasurement() {    
     clearTimeout(measurementTimeout)
     setMeasurementTimeout(undefined) 
-    setModalState(BluetoothTestGyroscopeModalState.Instructions)
+    setModalState(GyroscopeMeasurementStateEnum.Instructions)
   }
 
   function restartMeasurement() {
-    setModalState(BluetoothTestGyroscopeModalState.Instructions)
+    setModalState(GyroscopeMeasurementStateEnum.Instructions)
   }
 
   return (
@@ -66,12 +67,4 @@ export const BluetoothTestGyroscopeModal = () => {
     </Modal>
   );
 };
-export enum BluetoothTestGyroscopeModalState {
-  Instructions,
-  Measuring,
-  FinalResults
-}
-
-
-
 

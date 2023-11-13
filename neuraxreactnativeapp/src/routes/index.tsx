@@ -1,4 +1,4 @@
-import { UnloggedRoutes, UserRoutes } from './unlogged.routes';
+import { UnloggedRoutes, TherapistRoutes } from './unlogged.routes';
 import { useAuthContext } from '../../framework/auth/AuthContextProvider';
 import { UserProfileEnum } from '../../framework/domain/enum/UserProfileEnum';
 import { StackNavigatorContextProvider } from './StackNavigatorProvider';
@@ -19,7 +19,7 @@ export function Routes(){
             <StackNavigatorContextProvider InitialScreen='Home'>
                 <BluetoothContextProvider>
                     <TherapistContextProvider>
-                        <UserRoutes/>
+                        <TherapistRoutes/>
                     </TherapistContextProvider>
                 </BluetoothContextProvider>
             </StackNavigatorContextProvider>

@@ -7,6 +7,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { DeletePatientModal } from './DeletePatientModal';
 import React from 'react';
 import { PatientSessionParametersModal } from './Patient/PatientSessionParametersModal';
+import { AppRoutesEnum } from '../../routes/AppRoutesEnum';
 
 export function PatientDetailsComponent() {
   const {
@@ -81,7 +82,7 @@ export function PatientDetailsComponent() {
               <View style={{paddingTop:10, flex: 1, justifyContent:'center'}}>
                 <PrimaryGreenButton
                     activeOpacity={1}
-                    onPress={()=>push('PatientList')}>
+                    onPress={()=>push(AppRoutesEnum.Session)}>
                     <RegularButtonText  style={{fontSize:20}}>
                         Iniciar Sessão
                     </RegularButtonText>

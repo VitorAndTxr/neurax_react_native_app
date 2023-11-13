@@ -7,6 +7,10 @@ import React from 'react';
 import { PatientListScreen } from '../screens/PatientListScreen';
 import { PatientDetailsScreen } from '../screens/PatientDetailsScreen';
 import { PatientFormScreen } from '../screens/PatientFormScreen';
+import { SessionScreen } from '../screens/SessionScreen';
+import { SessionContextProvider } from '../context/SessionContext';
+import { useTherapistContext } from '../context/TherapistContext';
+import { AppRoutesEnum } from './AppRoutesEnum';
 
 
 export function UnloggedRoutes(){
@@ -14,7 +18,7 @@ export function UnloggedRoutes(){
     const {currentScreen} = useStackNavigatorContext()
 
     switch (currentScreen) {
-        case 'Login':
+        case AppRoutesEnum.Login:
           return (
             <LoginScreenContextProvider>
                 <LoginScreen/>
@@ -26,31 +30,70 @@ export function UnloggedRoutes(){
       }
 }
 
-export function UserRoutes(){
+export function TherapistRoutes(){
     const {currentScreen} = useStackNavigatorContext()
 
+    const {selectedPatient} = useTherapistContext()
+
     switch (currentScreen) {
-        case 'Home':
+        case AppRoutesEnum.Home:
           return (
             <HomeScreen/>
           );
-        case 'BluetoothSetup':
+        case AppRoutesEnum.BluetoothSetup:
           return(
             <BluetoothSetupScreen/>
             );
-        case 'PatientList':
+        case AppRoutesEnum.PatientList:
           return(
             <PatientListScreen/>
           );
-        case 'PatientDetails':
+        case AppRoutesEnum.PatientDetails:
           return(
             <PatientDetailsScreen/>
           );
-        case 'NewPatient':
+        case AppRoutesEnum.NewPatient:
           return(
             <PatientFormScreen/>
+          );  
+        case AppRoutesEnum.Session:
+          return(
+            <SessionContextProvider
+              patient={selectedPatient}
+              sessionParameters={{
+                amplitude:7,
+                minPulseWidth:100,
+                maxPulseWidth:300,
+                frequency:60,
+                pulseDuration:2
+              }}
+            >
+              <SessionScreen/>
+            </SessionContextProvider>
           );  
         default:
           return <div>Screen not found</div>;
       }
 }
+
+export function PatientRoutes(){
+  const {currentScreen} = useStackNavigatorContext()
+
+  switch (currentScreen) {
+      case 'Home':
+        return (
+          <HomeScreen/>
+        );
+      case 'BluetoothSetup':
+        return(
+          <BluetoothSetupScreen/>
+          );
+      case 'Session':
+        return(
+          <SessionScreen/>
+        );  
+      default:
+        return <div>Screen not found</div>;
+    }
+}
+

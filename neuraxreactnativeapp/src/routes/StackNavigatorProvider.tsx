@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BackHandler } from 'react-native';
 import { ReactNode, createContext, useContext } from "react";
 import {useBackHandler} from '@react-native-community/hooks'
+import { AppRoutesEnum } from './AppRoutesEnum';
 
 const StackNavigatorContext = createContext({} as StackNavigatorContextData)
 
@@ -16,6 +17,9 @@ export function StackNavigatorContextProvider(props: StackNavigatorContextProvid
     const [stack, setStack] = useState<string[]>([]);
 
     useBackHandler(() => {
+        if(currentScreen===AppRoutesEnum.Session){
+            return true
+        }
         pop()
         return true
       })

@@ -7,3 +7,9 @@ export interface SessionParametersViewModel {
     pulseDuration: number;
 }
 
+export interface SessionViewModel {
+    id: string;
+    startWristAmplitudeMeasurement:number
+    finishWristAmplitudeMeasurement:number
+}
+

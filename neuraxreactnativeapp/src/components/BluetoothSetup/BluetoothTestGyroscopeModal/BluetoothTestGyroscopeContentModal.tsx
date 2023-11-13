@@ -2,23 +2,23 @@ import React from 'react';
 import { BluetoothTestGyroscopeFinalResultsComponent } from './BluetoothTestGyroscopeFinalResultsComponent';
 import { BluetoothTestGyroscopeMeasuringComponent } from './BluetoothTestGyroscopeMeasuringComponent';
 import { BluetoothTestGyroscopeInstructionsComponent } from './BluetoothTestGyroscopeInstructionsComponent';
-import { BluetoothTestGyroscopeModalState } from './BluetoothTestGyroscopeModal';
+import { GyroscopeMeasurementStateEnum } from '../../../domain/enum/GyroscopeMeasurementStateEnum';
 
 export function BluetoothTestGyroscopeContentModal({
   modalState, initMeasurement, cancelMeasurement, restartMeasurement, totalAmplitude
 }: BluetoothTestGyroscopeContentModalProps) {
   switch (modalState) {
-    case BluetoothTestGyroscopeModalState.Instructions:
+    case GyroscopeMeasurementStateEnum.Instructions:
       return (
         <BluetoothTestGyroscopeInstructionsComponent
           initMeasurement={initMeasurement} />
       );
-    case BluetoothTestGyroscopeModalState.Measuring:
+    case GyroscopeMeasurementStateEnum.Measuring:
       return (
         <BluetoothTestGyroscopeMeasuringComponent
           cancelMeasurement={cancelMeasurement} />
       );
-    case BluetoothTestGyroscopeModalState.FinalResults:
+    case GyroscopeMeasurementStateEnum.FinalResults:
       return (
         <BluetoothTestGyroscopeFinalResultsComponent
           restartMeasurement={restartMeasurement}
@@ -29,7 +29,7 @@ export function BluetoothTestGyroscopeContentModal({
   }
 }
 interface BluetoothTestGyroscopeContentModalProps {
-  modalState: BluetoothTestGyroscopeModalState;
+  modalState: GyroscopeMeasurementStateEnum;
   totalAmplitude: number;
   initMeasurement: () => void;
   cancelMeasurement: () => void;
