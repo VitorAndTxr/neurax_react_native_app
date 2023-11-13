@@ -6,3 +6,4 @@ export interface SessionParametersViewModel {
     maxPulseWidth: number;
     stimulationTime: number;
 }
+
