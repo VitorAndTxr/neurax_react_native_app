@@ -3,9 +3,10 @@ import styled from 'styled-components/native';
 import { H3, LoginTextLabel, PrimaryButton, RegularButtonText, PrimaryGreenButton } from '../BaseViewStyles';
 import { useTherapistContext } from '../../context/TherapistContext';
 import { useStackNavigatorContext } from '../../routes/StackNavigatorProvider';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 export function PatientListComponent() {
-  const {patients, setPatientId, onSelectPatient, resetPatientForm, setIsEditing} = useTherapistContext();
+  const {patients, isLoading, onSelectPatient, resetPatientForm, setIsEditing} = useTherapistContext();
   const renderedPatients = [...patients];
   
   const { push } = useStackNavigatorContext()
@@ -48,6 +49,15 @@ export function PatientListComponent() {
               </CardStyle>
             );
           })}
+          <Spinner
+                    visible={isLoading}
+                    textContent={'Carregando...'}
+                    color='#08415C'
+                    overlayColor='#C6EAFA'
+                    textStyle={{ color: '#08415C' }}
+                    size={"large"}
+                    
+                />
         </ScrollView>
       </SafeAreaView>
     </View>

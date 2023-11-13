@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { H2, InputLabel, PrimaryButton, PrimaryGreenButton, PrimaryRedButton, RegularButtonText } from '../../BaseViewStyles';
 import { Modal, View, SafeAreaView, ScrollView } from 'react-native';
 import { useBluetoothContext, NeuraXBluetoothProtocolBodyPropertyEnum } from '../../../context/BluetoothContext';
@@ -7,7 +7,9 @@ import Slider from "react-native-a11y-slider";
 import { Divider } from '@rneui/themed';
 import { useTherapistContext } from '../../../context/TherapistContext';
 import { SessionParametersViewModel } from "../../../domain/models/SessionParametersViewModel";
+import PatientService from '../../../services/PatientService';
 
+const patientService = new PatientService();
 
 export const PatientSessionParametersModal = () => {
 
@@ -15,6 +17,8 @@ export const PatientSessionParametersModal = () => {
     showPatientSessionParameterModal, 
     setShowPatientSessionParameterModal,
     selectedPatient,
+    setSelectedPatient,
+    setIsLoading
   } = useTherapistContext();
 
   const params = {...selectedPatient.parameters}
@@ -24,11 +28,37 @@ export const PatientSessionParametersModal = () => {
     minPulseWidth:100,
     maxPulseWidth:300,
     frequency:60,
-    pulseDuration:2
-  })
+    stimulationTime:2
+  } )
 
-  function savePatientSessionParams(){
-    console.log(patientParams);
+  useEffect(()=>{
+    console.log("entro no modal");
+    if(selectedPatient.parameters != null){
+      setPatientParams(params)
+    }
+    
+    
+
+  },[selectedPatient])
+
+  async function savePatientSessionParams(){
+    setIsLoading(true);
+    let params = {...patientParams, patientId : selectedPatient.id}
+    await patientService.setPatientParameters(params)
+        .then((response)=>{
+          console.log(response)
+            if(response?.success){
+                console.log(response.result)
+                setSelectedPatient(response.result)
+            }
+        })
+        .catch((response)=>{
+
+        })
+    
+    //pop()
+    setShowPatientSessionParameterModal(false);
+    setIsLoading(false)
   }
 
   function onChange(values:number[], property:string) {
@@ -37,8 +67,8 @@ export const PatientSessionParametersModal = () => {
       setPatientParams(currentParams =>{                        
         return {
         ...currentParams,
-        minPulseWidth:values[0],
-        maxPulseWidth:values[1],
+        minPulseWidth: (values[0] < values[1]) ? values[0] : values[1],
+        maxPulseWidth: (values[0] > values[1]) ? values[0] : values[1],
         }
       })
       return
@@ -162,8 +192,8 @@ export const PatientSessionParametersModal = () => {
                     }}
                     labelStyle={{}}
                     style={{ width: 250 }}
-                    values={[(patientParams.pulseDuration!)]}
-                    onChange={(value: number[]) => onChange(value, 'pulseDuration')} />
+                    values={[(patientParams.stimulationTime!)]}
+                    onChange={(value: number[]) => onChange(value, 'stimulationTime')} />
                   <InputLabel>
                     10s
                   </InputLabel>
@@ -173,7 +203,7 @@ export const PatientSessionParametersModal = () => {
             </ScrollView>
             <View style={{flexDirection:'row', flex:1, paddingVertical:20}}>
               <View style={{flex:1, padding:4}}>
-                <PrimaryRedButton onPress={() => { () => setShowPatientSessionParameterModal(false); }}>
+                <PrimaryRedButton onPress={() => {setShowPatientSessionParameterModal(false)}}>
                   <RegularButtonText>
                     Cancelar
                   </RegularButtonText>

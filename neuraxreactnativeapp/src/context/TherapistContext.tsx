@@ -225,11 +225,11 @@ export function TherapistContextProvider(props: TherapistContextProviderProps) {
             <TherapistContext.Provider value={{
                 patients, 
                 patientId, setPatientId, 
+                selectedPatient, setSelectedPatient, onSelectPatient,
                 showPatientSessionParameterModal, setShowPatientSessionParameterModal,
-                selectedPatient, onSelectPatient,
                 patientForm, 
                 onChangeStringsPatientForm, 
-                isLoading, 
+                isLoading, setIsLoading,
                 onChangeDateBirthPatientForm, resetPatientForm, onSavePatient, isEditing, setIsEditing, onPressEditPatient,
                 showDeletePatientModal, setShowDeletePatientModal, onDeletePatient,
 
@@ -248,10 +248,13 @@ interface TherapistContextData {
 
   patientId:string;
   setPatientId: React.Dispatch<React.SetStateAction<string>>;
+
   selectedPatient: PatientViewModel;
+  setSelectedPatient: React.Dispatch<React.SetStateAction<PatientViewModel>>
 
   patientForm: PatientFormBody;
   isLoading:boolean
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
 
   isEditing:boolean
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>

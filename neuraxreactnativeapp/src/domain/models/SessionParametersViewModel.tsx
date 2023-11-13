@@ -4,7 +4,7 @@ export interface SessionParametersViewModel {
     frequency: number;
     minPulseWidth: number;
     maxPulseWidth: number;
-    pulseDuration: number;
+    stimulationTime: number;
 }
 
 export interface SessionViewModel {

@@ -10,6 +10,7 @@ export interface PatientViewModel {
     caretakerName: string;
     caretakerPhone: string;
     parameters:SessionParametersViewModel
+    sessionAllowed: boolean;
 
 }
 

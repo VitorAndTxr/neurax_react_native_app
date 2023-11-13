@@ -8,21 +8,63 @@ import { DeletePatientModal } from './DeletePatientModal';
 import React from 'react';
 import { PatientSessionParametersModal } from './Patient/PatientSessionParametersModal';
 import { AppRoutesEnum } from '../../routes/AppRoutesEnum';
+import PatientService from '../../services/PatientService';
+
+const patientService = new PatientService();
 
 export function PatientDetailsComponent() {
   const {
     selectedPatient, 
-    isLoading, 
+    isLoading,
+    setIsLoading, 
     onPressEditPatient, 
     showDeletePatientModal, 
     setShowDeletePatientModal,
     setShowPatientSessionParameterModal,
-    showPatientSessionParameterModal
+    showPatientSessionParameterModal,
+    setSelectedPatient
   } = useTherapistContext();
 
   const patient = selectedPatient;
   
   const { push } = useStackNavigatorContext()
+
+  async function allowSessions(){
+    setIsLoading(true);
+
+    console.log(selectedPatient.id);
+    await patientService.allowPatientSessions(selectedPatient.id)
+        .then((response)=>{
+            if(response?.success){
+                console.log(response.result)
+                setSelectedPatient(response.result)
+            }
+        })
+        .catch((response)=>{
+
+        })
+    
+    //pop()
+    setIsLoading(false)
+  }
+  async function disallowSessions(){
+    setIsLoading(true);
+
+    console.log(selectedPatient.id);
+    await patientService.disallowPatientSessions(selectedPatient.id)
+        .then((response)=>{
+            if(response?.success){
+                console.log(response.result)
+                setSelectedPatient(response.result)
+            }
+        })
+        .catch((response)=>{
+
+        })
+    
+    //pop()
+    setIsLoading(false)
+  }
   return (
   <View style={{
     justifyContent: 'center',
@@ -81,6 +123,7 @@ export function PatientDetailsComponent() {
               </CardStyle>
               <View style={{paddingTop:10, flex: 1, justifyContent:'center'}}>
                 <PrimaryGreenButton
+                    disabled={patient.parameters == null || !patient.sessionAllowed}
                     activeOpacity={1}
                     onPress={()=>push(AppRoutesEnum.Session)}>
                     <RegularButtonText  style={{fontSize:20}}>
@@ -101,13 +144,29 @@ export function PatientDetailsComponent() {
                                 Parâmetros
                             </RegularButtonText>
                         </CustomPrimaryButton>
-                        <CustomPrimaryGreenButton
-                            activeOpacity={1}
-                            onPress={()=>push('PatientList')}>
-                            <RegularButtonText  style={{fontSize:20}}>
-                                Liberar sessões
-                            </RegularButtonText>
-                        </CustomPrimaryGreenButton>
+                        {patient.sessionAllowed ? 
+                          (
+                            <>
+                              <CustomPrimaryRedButton
+                                activeOpacity={1}
+                                onPress={()=>push('PatientList')}>
+                                  <RegularButtonText  style={{fontSize:20}} onPress={()=>{disallowSessions()}}>
+                                    Bloquear sessões
+                                  </RegularButtonText>
+                              </CustomPrimaryRedButton>
+                            </>
+                          ):(
+                            <>
+                              <CustomPrimaryGreenButton>
+                                <RegularButtonText  style={{fontSize:20}} onPress={()=>{allowSessions()}}>
+                                    Liberar sessões
+                                </RegularButtonText>
+                              </CustomPrimaryGreenButton>
+                            </>
+                          )
+                        }
+                            
+                        
                         <CustomPrimaryButton
                             activeOpacity={1}
                             onPress={()=>{onPressEditPatient()}}>

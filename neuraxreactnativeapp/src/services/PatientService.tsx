@@ -59,4 +59,40 @@ export default class PatientService {
         }
     }
 
+    public async setPatientParameters(payload: any): Promise<ApiResponse<PatientViewModel> | undefined> {
+        try {
+            console.log(payload);
+            
+            let endpoint = `/Patient/Parameters`;
+            let response: AxiosResponse<ApiResponse<PatientViewModel>> = await ApiInterface.post(endpoint, payload);
+            return response.data;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    public async allowPatientSessions(id: string): Promise<ApiResponse<PatientViewModel> | undefined> {
+        try {
+            let endpoint = `/Therapist/AllowPatientSessions/${id}`;
+            let response: AxiosResponse<ApiResponse<PatientViewModel>> = await ApiInterface.patch(endpoint);
+            return response.data;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    public async disallowPatientSessions(id: string): Promise<ApiResponse<PatientViewModel> | undefined> {
+        try {
+            let endpoint = `/Therapist/DisallowPatientSessions/${id}`;
+            let response: AxiosResponse<ApiResponse<PatientViewModel>> = await ApiInterface.patch(endpoint);
+            return response.data;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    
+
+    
+
 }
