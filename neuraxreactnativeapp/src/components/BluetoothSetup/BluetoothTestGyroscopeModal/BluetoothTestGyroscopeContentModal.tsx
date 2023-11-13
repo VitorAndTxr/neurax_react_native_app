@@ -1,7 +1,7 @@
 import React from 'react';
-import { BluetoothTestGyroscopeFinalResultsComponent } from './BluetoothTestGyroscopeFinalResultsComponent';
-import { BluetoothTestGyroscopeMeasuringComponent } from './BluetoothTestGyroscopeMeasuringComponent';
-import { BluetoothTestGyroscopeInstructionsComponent } from './BluetoothTestGyroscopeInstructionsComponent';
+import { GyroscopeFinalResultsComponent } from './GyroscopeFinalResultsComponent';
+import { GyroscopeMeasuringComponent } from './GyroscopeMeasuringComponent';
+import { GyroscopeInstructionsComponent } from './GyroscopeInstructionsComponent';
 import { GyroscopeMeasurementStateEnum } from '../../../domain/enum/GyroscopeMeasurementStateEnum';
 
 export function BluetoothTestGyroscopeContentModal({
@@ -10,18 +10,19 @@ export function BluetoothTestGyroscopeContentModal({
   switch (modalState) {
     case GyroscopeMeasurementStateEnum.Instructions:
       return (
-        <BluetoothTestGyroscopeInstructionsComponent
+        <GyroscopeInstructionsComponent
           initMeasurement={initMeasurement} />
       );
     case GyroscopeMeasurementStateEnum.Measuring:
       return (
-        <BluetoothTestGyroscopeMeasuringComponent
+        <GyroscopeMeasuringComponent
           cancelMeasurement={cancelMeasurement} />
       );
     case GyroscopeMeasurementStateEnum.FinalResults:
       return (
-        <BluetoothTestGyroscopeFinalResultsComponent
+        <GyroscopeFinalResultsComponent
           restartMeasurement={restartMeasurement}
+          startSession={()=>{}}
           totalAmplitude={totalAmplitude} />
       );
     default:

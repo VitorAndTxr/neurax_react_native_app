@@ -123,7 +123,7 @@ export function PatientDetailsComponent() {
               </CardStyle>
               <View style={{paddingTop:10, flex: 1, justifyContent:'center'}}>
                 <PrimaryGreenButton
-                    disabled={patient.parameters == null || !patient.sessionAllowed}
+                    //disabled={patient.parameters == null || !patient.sessionAllowed}
                     activeOpacity={1}
                     onPress={()=>push(AppRoutesEnum.Session)}>
                     <RegularButtonText  style={{fontSize:20}}>

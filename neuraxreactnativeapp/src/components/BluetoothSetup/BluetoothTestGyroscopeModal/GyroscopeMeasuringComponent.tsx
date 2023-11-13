@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { H2, LoginTextLabel, PrimaryButton, RegularButtonText } from '../../BaseViewStyles';
+import { H2, LoginTextLabel, PrimaryButton, PrimaryRedButton, RegularButtonText } from '../../BaseViewStyles';
 import { View } from 'react-native';
 import { Divider } from '@rneui/themed';
+import { useStackNavigatorContext } from '../../../routes/StackNavigatorProvider';
+import { AppRoutesEnum } from '../../../routes/AppRoutesEnum';
 
-export function BluetoothTestGyroscopeMeasuringComponent({ cancelMeasurement }: BluetoothTestGyroscopeMeasuringComponentProps) {
+export function GyroscopeMeasuringComponent({ cancelMeasurement }: BluetoothTestGyroscopeMeasuringComponentProps) {
+  
+  const {currentScreen} = useStackNavigatorContext()
+  
   const [counter, setCounter] = useState(10);
 
   useEffect(() => {
@@ -16,7 +21,9 @@ export function BluetoothTestGyroscopeMeasuringComponent({ cancelMeasurement }: 
 
   return (
     <>
-      <Divider style={{ marginVertical: 10 }} />
+    {
+      currentScreen===AppRoutesEnum.BluetoothSetup&&<Divider style={{ marginVertical: 10 }} />
+    }
       <View style={{ justifyContent: 'center', height: 200 }}>
         <LoginTextLabel>
           Levante a costas da sua mão o máximo que conseguir:
@@ -26,16 +33,17 @@ export function BluetoothTestGyroscopeMeasuringComponent({ cancelMeasurement }: 
         </H2>
       </View>
       <Divider style={{ marginVertical: 5 }} />
-      <PrimaryButton
+      <PrimaryRedButton
         onPress={cancelMeasurement}
       >
         <RegularButtonText>
-          Iniciar medição
+          Cancelar medida
         </RegularButtonText>
-      </PrimaryButton>
+      </PrimaryRedButton>
     </>
   );
 }
+
 interface BluetoothTestGyroscopeMeasuringComponentProps {
   cancelMeasurement: () => void;
 }

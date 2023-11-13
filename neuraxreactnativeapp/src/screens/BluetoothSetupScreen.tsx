@@ -38,7 +38,8 @@ export function BluetoothSetupScreen() {
                   <BluetoothTestSEmgModal/>
                 }
                 {
-                  showTestGyroscopeModal&&
+                  showTestGyroscopeModal
+                  &&
                   <BluetoothTestGyroscopeModal/>
                 }
             </LoggedViewStyles>

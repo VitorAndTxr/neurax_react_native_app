@@ -6,7 +6,7 @@ import { useStackNavigatorContext } from '../../../routes/StackNavigatorProvider
 import { AppRoutesEnum } from '../../../routes/AppRoutesEnum';
 import { useSessionContext } from '../../../context/SessionContext';
 
-export function BluetoothTestGyroscopeInstructionsComponent({ initMeasurement }: BluetoothTestGyroscopeInstructionsComponentProps) {
+export function GyroscopeInstructionsComponent({ initMeasurement }: BluetoothTestGyroscopeInstructionsComponentProps) {
   const {currentScreen} = useStackNavigatorContext()
   const {cancelSession} = useSessionContext()
   
@@ -22,10 +22,13 @@ export function BluetoothTestGyroscopeInstructionsComponent({ initMeasurement }:
           <LoginTextLabel style={{marginBottom:30}}>
             Afim de avaliar o progresso do paciente ao longo do tempo, é necessário salvar informações sobre a amplitude da movimentação do punho do paciente
           </LoginTextLabel>
+          <LoginTextLabel style={{marginBottom:30}}>
+            Após clicar em "Iniciar Medição", o paciente terá 10 segundos levantar as costas da mão o máximo que conseguir 
+          </LoginTextLabel>
         </>
       }
         <LoginTextLabel style={{ marginBottom: (currentScreen===AppRoutesEnum.Session?30:0)}}>
-          O paciente deve estar com o pulso em posição de repouso antes de iniciar a medição para garantir a precisão da medida
+          O paciente deve estar com o pulso completamente relaxado antes de iniciar a medição para garantir a precisão da medida
         </LoginTextLabel>
       </View>
       {

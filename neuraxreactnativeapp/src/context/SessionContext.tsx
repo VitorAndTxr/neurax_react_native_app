@@ -26,12 +26,9 @@ export function SessionContextProvider({
     patient
 }: SessionContextProviderProps) {
 
-
-    
     const {userProfile} = useAuthContext()
 
     const {pop} = useStackNavigatorContext()
-
 
     const [sessionState, setSessionState] = useState<SessionStateEnum>(SessionStateEnum.MeasureWrist);
 
