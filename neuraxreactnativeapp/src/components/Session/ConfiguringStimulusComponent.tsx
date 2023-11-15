@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useSessionContext } from '../../context/SessionContext';
-import { H2, InputLabel, InstructionText, LoginTextLabel,  ModalContainer,  ModalContent,  OverLapCard, PrimaryGreenButton, PrimaryRedButton, RegularButtonText } from '../BaseViewStyles';
+import { H2, InputLabel, InstructionText, LoginTextLabel,  ModalContainer,  OverLapCard, PrimaryGreenButton, PrimaryRedButton, RegularButtonText } from '../BaseViewStyles';
 import { Modal, View } from 'react-native';
 import Slider from "react-native-a11y-slider";
 import { Divider } from '@rneui/base';
 import { ConfirmExitSessionModal } from './ConfirmExitSessionModal';
-import { CustomPrimaryGreenButton, CustomPrimaryRedButton } from '../PatientList/DeletePatientModal';
+import { FesInstructionsContentCompoent } from './FesInstructionsContentCompoent';
+import { WaitingTriggerContentCompoent } from './WaitingTriggerContentCompoent';
+import { FesStimulationContentCompoent } from './FesStimulationContentCompoent';
 
 export function ConfiguringStimulusComponent() {
 
@@ -110,7 +112,8 @@ export function StimulatingModal(){
     <Modal transparent={true} visible={true} animationType="slide">
       <ModalContainer>
       {
-
+      <StimulatingModalContent      
+        modalState = {modalState}/>
       }
       </ModalContainer>
     </Modal>
@@ -123,7 +126,11 @@ enum StimulatingModalState{
   Stimulating
 }
 
-export function StimulatingModalContent(modalState:StimulatingModalState){
+interface StimulatingModalContentProps{
+  modalState:StimulatingModalState
+}
+
+export function StimulatingModalContent({modalState}:StimulatingModalContentProps){
  switch (modalState) {
   case StimulatingModalState.Instructions:
     return(
@@ -138,109 +145,9 @@ export function StimulatingModalContent(modalState:StimulatingModalState){
     return(
       <FesStimulationContentCompoent/>
     )
+  default:
+    return<></>
  }
-}
-
-export function FesInstructionsContentCompoent(){
-  return(
-    <ModalContent style={{ maxHeight: 250 }}>
-      <H2 style={{
-        marginBottom: 20
-      }}>
-        Iniciar Estímulo
-      </H2>
-      <InputLabel>
-      {`\u2022`}O paciente deve estar com o pulso em posição de repouso antes de iniciar o estimulo. 
-      </InputLabel>
-      <InputLabel>
-      {`\u2022`}Após clicar em iniciar ele deve tentar fazer a extensão do pulso nos próximos 30 segundos.
-      </InputLabel>
-      <InputLabel>
-      {`\u2022`}Caso não seja detectada a tentativa de movimento, reduza a dificuldade.
-      </InputLabel>
-      <View style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'row' }}>
-
-        <CustomPrimaryGreenButton activeOpacity={1} onPress={() => { }}>
-          <RegularButtonText style={{ fontSize: 20 }}>
-            Cancelar
-          </RegularButtonText>
-        </CustomPrimaryGreenButton>
-        <CustomPrimaryRedButton activeOpacity={1}>
-          <RegularButtonText style={{ fontSize: 20 }} onPress={() => { }}>
-            Finalizar
-          </RegularButtonText>
-        </CustomPrimaryRedButton>
-      </View>
-    </ModalContent>
-  )
-}
-
-export function WaitingTriggerContentCompoent(){
-  return(
-    <ModalContent style={{ maxHeight: 250 }}>
-      <H2 style={{
-        marginBottom: 20
-      }}>
-        Iniciar Estímulo
-      </H2>
-      <InputLabel>
-      {`\u2022`}O paciente deve estar com o pulso em posição de repouso antes de iniciar o estimulo. 
-      </InputLabel>
-      <InputLabel>
-      {`\u2022`}Após clicar em iniciar ele deve tentar fazer a extensão do pulso nos próximos 30 segundos.
-      </InputLabel>
-      <InputLabel>
-      {`\u2022`}Caso não seja detectada a tentativa de movimento, reduza a dificuldade.
-      </InputLabel>
-      <View style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'row' }}>
-
-        <CustomPrimaryGreenButton activeOpacity={1} onPress={() => { }}>
-          <RegularButtonText style={{ fontSize: 20 }}>
-            Cancelar
-          </RegularButtonText>
-        </CustomPrimaryGreenButton>
-        <CustomPrimaryRedButton activeOpacity={1}>
-          <RegularButtonText style={{ fontSize: 20 }} onPress={() => { }}>
-            Finalizar
-          </RegularButtonText>
-        </CustomPrimaryRedButton>
-      </View>
-    </ModalContent>
-  )
-}
-
-export function FesStimulationContentCompoent(){
-  return(
-    <ModalContent style={{ maxHeight: 250 }}>
-      <H2 style={{
-        marginBottom: 20
-      }}>
-        Iniciar Estímulo
-      </H2>
-      <InputLabel>
-      {`\u2022`}O paciente deve estar com o pulso em posição de repouso antes de iniciar o estimulo. 
-      </InputLabel>
-      <InputLabel>
-      {`\u2022`}Após clicar em iniciar ele deve tentar fazer a extensão do pulso nos próximos 30 segundos.
-      </InputLabel>
-      <InputLabel>
-      {`\u2022`}Caso não seja detectada a tentativa de movimento, reduza a dificuldade.
-      </InputLabel>
-      <View style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'row' }}>
-
-        <CustomPrimaryGreenButton activeOpacity={1} onPress={() => { }}>
-          <RegularButtonText style={{ fontSize: 20 }}>
-            Cancelar
-          </RegularButtonText>
-        </CustomPrimaryGreenButton>
-        <CustomPrimaryRedButton activeOpacity={1}>
-          <RegularButtonText style={{ fontSize: 20 }} onPress={() => { }}>
-            Finalizar
-          </RegularButtonText>
-        </CustomPrimaryRedButton>
-      </View>
-    </ModalContent>
-  )
 }
 
 

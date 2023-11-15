@@ -23,11 +23,12 @@ export function SessionScreenComponent() {
       return (
         <ConfiguringStimulusComponent/>
       );
+    default:
+      return (
+        <>
+        </>
+      );
   }
-  return (
-    <>
-    </>
-  );
 }
 
 
