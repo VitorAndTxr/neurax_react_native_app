@@ -121,6 +121,14 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
         }
     }
 
+    async function writeToBluetooth() {
+        try {
+            let response = await RNBluetoothClassic.writeToDevice(selectedDevice!.address, 'aaaaaa')
+        } catch (error) {
+            console.log(error,'BluetoothContext.writeToBluetooth.Error')
+        }
+    }
+
     async function updatePairedDevices(){
         try {
             let processedNeuraDevices:ActivableBluetoothDevice[] =[] 

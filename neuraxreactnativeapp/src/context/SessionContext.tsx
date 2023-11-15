@@ -26,11 +26,11 @@ export function SessionContextProvider({
     patient
 }: SessionContextProviderProps) {
 
-    const {userProfile} = useAuthContext()
+    const { userProfile } = useAuthContext()
 
     const {pop} = useStackNavigatorContext()
 
-    const [sessionState, setSessionState] = useState<SessionStateEnum>(SessionStateEnum.MeasureWrist);
+    const [sessionState, setSessionState] = useState<SessionStateEnum>(SessionStateEnum.ConfiguringStimulus);
 
     const [repetitions, setRepetitions] = useState<SessionSegmentViewModel[]>([]);
 
@@ -46,7 +46,7 @@ export function SessionContextProvider({
                 setSessionState(SessionStateEnum.SendPhoto)
                 break;
             case UserProfileEnum.Theraphist:
-                setSessionState(SessionStateEnum.MeasureWrist)
+                setSessionState(SessionStateEnum.ConfiguringStimulus)
                 break;
             default:
                 break;

@@ -1,8 +1,10 @@
 import React from 'react';
 import { useSessionContext } from '../../context/SessionContext';
 import { SessionStateEnum } from '../../domain/enum/SessionStateEnum';
-import { LoginTextLabel } from '../BaseViewStyles';
+import { LoginTextLabel, PrimaryButton } from '../BaseViewStyles';
 import { SessionWristMeasurementComponent } from './SessionWristMeasurementComponent';
+import { ConfiguringStimulusComponent } from './ConfiguringStimulusComponent';
+
 
 export function SessionScreenComponent() {
   const { sessionState } = useSessionContext();
@@ -28,15 +30,6 @@ export function SessionScreenComponent() {
   );
 }
 
-
-
-function ConfiguringStimulusComponent(){
-  return(
-    <LoginTextLabel>
-      Configurando Estimulo
-    </LoginTextLabel>
-  )
-}
 
 
 

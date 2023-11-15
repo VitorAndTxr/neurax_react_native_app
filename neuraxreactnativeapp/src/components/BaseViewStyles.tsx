@@ -79,6 +79,12 @@ export const InputLabel = styled.Text`
     font-weight:700;
     font-size:18px;
 `
+export const InstructionText = styled.Text`
+    text-align: left;
+    color: #08415C;
+    font-family:Inter_700Bold;
+    font-size:18px;
+`
 export const LoginTextBold = styled(LoginTextLabel)`
     font-weight:600;
 `
@@ -126,3 +132,32 @@ export const RegularButtonText = styled.Text`
     font-family:Inter_400Regular;
     font-size:24px;
 `
+
+export const OverLapCard = styled.View`
+  background-color: #D3EBF5;
+
+  border-radius: 10px;
+
+  flex-direction: col;
+  width: 330px;
+  justify-content:center;
+  align-items: center;
+  elevation:10;
+  padding:5px;
+  margin-top:5px;
+  margin-bottom:5px;
+`;
+
+export const ModalContainer = styled.View`
+      flex: 1;
+      justify-content:center;
+      align-items:center;
+      background-color: #000000cc;
+`;
+export const ModalContent = styled.ScrollView`
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-left:5px;
+    max-height:750px;
+  `;
