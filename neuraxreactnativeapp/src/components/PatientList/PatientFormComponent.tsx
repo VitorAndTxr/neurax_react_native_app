@@ -14,11 +14,13 @@ export function PatientFormComponent() {
   const [date, setDate] = useState(new Date());
   
   const { push, pop } = useStackNavigatorContext()
-  return (<View style={{
-    justifyContent: 'center',
-    flexDirection: 'col',
-    marginTop:'300px',
-  }}>
+  
+  return (
+    <View style={{
+        justifyContent: 'center',
+        flexDirection: 'col',
+        marginTop:'300px',
+    }}>
     <H3>{isEditing ? 'Editar': 'Novo'} Paciente</H3>
 
     <CustomTextLabel>

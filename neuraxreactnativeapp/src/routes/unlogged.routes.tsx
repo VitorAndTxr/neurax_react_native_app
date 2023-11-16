@@ -11,6 +11,7 @@ import { SessionScreen } from '../screens/SessionScreen';
 import { SessionContextProvider } from '../context/SessionContext';
 import { useTherapistContext } from '../context/TherapistContext';
 import { AppRoutesEnum } from './AppRoutesEnum';
+import { CameraScreen } from '../screens/CameraScreen';
 
 
 export function UnloggedRoutes(){
@@ -65,12 +66,16 @@ export function TherapistRoutes(){
                 minPulseWidth:100,
                 maxPulseWidth:300,
                 frequency:60,
-                pulseDuration:2
+                stimulationTime:2
               }}
             >
               <SessionScreen/>
             </SessionContextProvider>
           );  
+        case AppRoutesEnum.Camera:
+            return(
+              <CameraScreen/>
+            );  
         default:
           return <div>Screen not found</div>;
       }
@@ -91,7 +96,11 @@ export function PatientRoutes(){
       case 'Session':
         return(
           <SessionScreen/>
-        );  
+        );
+      case 'Camera':
+        return(
+          <CameraScreen/>
+        );
       default:
         return <div>Screen not found</div>;
     }
