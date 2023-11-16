@@ -54,7 +54,7 @@ export function HomeScreen() {
                         (
                         <PrimaryGreenButton
                             activeOpacity={1}
-                            onPress={logout}>
+                            onPress={()=>push('Camera')}>
                             <RegularButtonText>
                                 Iniciar Sessão
                             </RegularButtonText>

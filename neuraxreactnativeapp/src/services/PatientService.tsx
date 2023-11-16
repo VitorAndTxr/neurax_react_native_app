@@ -7,7 +7,6 @@ import { PatientListViewModel } from "../domain/models/PatientListViewModel";
 import { PatientViewModel } from "../domain/models/PatientViewModel";
 import { PatientFormBody } from "../context/TherapistContext";
 
-
 export default class PatientService {
     public async getPatients(): Promise<ApiResponse<PatientListViewModel[]> | undefined> {
         try {
@@ -91,6 +90,35 @@ export default class PatientService {
         }
     }
 
+    public async SendSessionPhoto(formData: FormData): Promise<ApiResponse<boolean> | undefined> {
+        try {
+            let endpoint = `/Session/UploadPhotos`;
+            let response: AxiosResponse<ApiResponse<boolean>> = await ApiInterface.postForm(endpoint, formData);
+            return response.data;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    public async CreateSession(formData: FormData): Promise<ApiResponse<boolean> | undefined> {
+        try {
+            let endpoint = `/Patient/CreateSession`;
+            let response: AxiosResponse<ApiResponse<boolean>> = await ApiInterface.postForm(endpoint, formData);
+            return response.data;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    public async getPatientIdByAccountId(id: string): Promise<ApiResponse<string> | undefined> {
+        try {
+            let endpoint = `/Patient/GetPatientId/${id}`;
+            let response: AxiosResponse<ApiResponse<string>> = await ApiInterface.get(endpoint);
+            return response.data;
+        } catch (error) {
+            console.error(error);
+        }
+    }
     
 
     

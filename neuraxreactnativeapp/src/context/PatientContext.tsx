@@ -21,9 +21,28 @@ export function PatientContextProvider(props: PatientContextProviderProps) {
     const {getDecodedToken} = useAuthContext();
     const {push, pop} = useStackNavigatorContext();
 
+    const [patientId, setPatientId] = useState('');
+
+    useEffect(()=>{
+        getDecodedToken().then((result) => {
+            if(result?.sub != undefined){
+                patientService.getPatientIdByAccountId(result?.sub)
+                .then((response)=>{
+                    if(response?.success){
+                        setPatientId(response.result)
+                    }
+                })
+                .catch((response)=>{
+        
+                })
+            }
+            
+        })
+    },[])
+
     return (
         <>
-            <PatientContext.Provider value={{
+            <PatientContext.Provider value={{ patientId, setPatientId
             }}>
                 {props.children}
             </PatientContext.Provider>
@@ -31,10 +50,11 @@ export function PatientContextProvider(props: PatientContextProviderProps) {
     );
 }
 
-export function useTherapistContext() {
+export function usePatientContext() {
     return useContext(PatientContext);
 }
 interface PatientContextData {
-
+  patientId:string;
+  setPatientId: React.Dispatch<React.SetStateAction<string>>;
 }
 
