@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { ReactNode, createContext, useContext } from "react";
-import { DeviceEventEmitter,    
-    NativeModules,
-    NativeAppEventEmitter,
-    BackHandler, } from 'react-native';
 import RNBluetoothClassic, { BluetoothDevice, BluetoothEventSubscription, BluetoothNativeDevice} from 'react-native-bluetooth-classic';
 
 const BluetoothContext = createContext({} as BluetoothContextData);
@@ -62,7 +58,6 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
     },[triggerDettected])
 
     useEffect(()=>{
-
     },[selectedDevice])
 
     async function initBluetooth() {
@@ -121,9 +116,53 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
         }
     }
 
-    async function writeToBluetooth() {
+    function measureAmplitude(){
+        let payload:NeuraXBluetoothProtocolPayload = {
+            cd:NeuraXBluetoothProtocolFunctionEnum.GyroscopeReading,
+            mt:NeuraXBluetoothProtocolMethodEnum.EXECUTE
+        }
+        console.log(payload);
+        
+        writeToBluetooth(JSON.stringify(payload))
+    }
+
+    async function FesStimulation(){
+        let payload:NeuraXBluetoothProtocolPayload = {
+            cd:NeuraXBluetoothProtocolFunctionEnum.FesParam,
+            mt:NeuraXBluetoothProtocolMethodEnum.WRITE,
+            bd:{
+                a:fesParams.a,
+                f:fesParams.f,
+                pw:fesParams.pw,
+                pd:fesParams.pd,
+                df:5
+            }
+        }
+        console.log(payload);
+
+        setTimeout(() => {
+            
+            writeToBluetooth(JSON.stringify(payload)).then(
+                ()=>{
+                    
+                    let payload2:NeuraXBluetoothProtocolPayload = {
+                        cd:NeuraXBluetoothProtocolFunctionEnum.SingleStimuli,
+                        mt:NeuraXBluetoothProtocolMethodEnum.EXECUTE,
+            
+                    }
+                    console.log(payload2);
+                    
+                    writeToBluetooth(JSON.stringify(payload2))
+                }
+            )
+        }, 100);
+        
+
+    }
+
+    async function writeToBluetooth(payload:string) {
         try {
-            let response = await RNBluetoothClassic.writeToDevice(selectedDevice!.address, 'aaaaaa')
+            let response = await RNBluetoothClassic.writeToDevice(selectedDevice!.address, payload+'\0')
         } catch (error) {
             console.log(error,'BluetoothContext.writeToBluetooth.Error')
         }
@@ -133,7 +172,7 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
         try {
             let processedNeuraDevices:ActivableBluetoothDevice[] =[] 
             let boundedDevices = await RNBluetoothClassic.getBondedDevices()
-            let boundedNeuraDevices = boundedDevices.filter( item => {return item.name === 'ESP32'})
+            let boundedNeuraDevices = boundedDevices.filter( item => {return item.name === 'NeuroEstimulator'})
 
             for (let index = 0; index < boundedNeuraDevices.length; index++) {
                 const boundedNeuraDevice = boundedNeuraDevices[index];
@@ -165,7 +204,7 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
         try {            
             
             let connectedDevice = await RNBluetoothClassic.connectToDevice(address,{
-                secureSocket: false 
+                secureSocket: false
             })
             
             if(connectedDevice)
@@ -179,9 +218,9 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
                     active:true
                 }as ActivableBluetoothDevice)
 
-                const onRecieveListener = connectedDevice.onDataReceived((data) => {
-                    console.log('Dados recebidos:', data.data);
-              
+                const onRecieveListener = connectedDevice.onDataReceived((btEntry) => {
+                    console.log('Dados recebidos:', btEntry.data);
+                    decodeMessage(btEntry.data)
                     // Faça algo com os dados recebidos, por exemplo, atualize a interface do usuário
                 })
                 const onDisconnectListener = RNBluetoothClassic.onDeviceDisconnected((deviceDisconectEvent:any)=>{
@@ -208,6 +247,32 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
             setShowConnectionErrorModal(true)           
         }
     }
+
+    function decodeMessage(message:string){
+        let messageBody = JSON.parse(message) as NeuraXBluetoothProtocolPayload
+
+        console.log(messageBody);
+        
+
+        switch(messageBody[NeuraXBluetoothProtocolBodyFieldEnum.CODE]){
+            case NeuraXBluetoothProtocolFunctionEnum.GyroscopeReading:
+                console.log("Giroscópio");
+                setWristAmplitude(messageBody.bd!.a!)
+                console.log(messageBody.bd!.a);
+
+                break;
+            case NeuraXBluetoothProtocolFunctionEnum.Status:
+                console.log("Status");
+                break;
+            case NeuraXBluetoothProtocolFunctionEnum.Trigger:
+                console.log("Trigger");
+                break;
+            default:
+                break;
+
+        }
+    }
+
     function openBluetoothSettings(){
         RNBluetoothClassic.openBluetoothSettings()
     }
@@ -250,6 +315,7 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
 
     function testFes():void{
         console.log(fesParams);
+        FesStimulation()
         
     }
 
@@ -269,7 +335,9 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
 
                 selectedDevice,
                 setSelectedDevice,
+                FesStimulation,
 
+                measureAmplitude,
                 connectBluetooth,
                 initBluetooth,
                 openBluetoothSettings,
@@ -321,6 +389,8 @@ interface BluetoothContextData {
     disconnect:(address:string) => void
     openBluetoothSettings:() => void
     initBluetooth:() => void
+    measureAmplitude:() => void
+    FesStimulation:() => void
     connectBluetooth:(address:string) => void
 
     onChange:(values:number[], property:NeuraXBluetoothProtocolBodyPropertyEnum) => void
@@ -338,6 +408,7 @@ enum NeuraXBluetoothProtocolFunctionEnum{
     SingleStimuli,
     FesParam,
     Status,
+    Trigger,
     ACK
 }
 
@@ -371,7 +442,7 @@ enum NeuraXBluetoothProtocolBodyFieldEnum{
 export type NeuraXBluetoothProtocolPayload = {
     [NeuraXBluetoothProtocolBodyFieldEnum.CODE]:number,
     [NeuraXBluetoothProtocolBodyFieldEnum.METHOD]:string,
-    [NeuraXBluetoothProtocolBodyFieldEnum.BODY]:NeuraXBluetoothProtocolBody
+    [NeuraXBluetoothProtocolBodyFieldEnum.BODY]: NeuraXBluetoothProtocolBody|null
 }
 
 export type NeuraXBluetoothProtocolBody = {

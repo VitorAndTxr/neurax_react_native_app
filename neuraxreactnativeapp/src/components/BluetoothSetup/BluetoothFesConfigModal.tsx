@@ -15,8 +15,6 @@ export const BluetoothFesConfigModal = () => {
     onChange
   } = useBluetoothContext();
 
-
-
   return (
     <Modal transparent={true} visible={showFesTestModal} animationType="slide" onRequestClose={() => setShowFesTestModal(false)}>
       <ModalContainer>

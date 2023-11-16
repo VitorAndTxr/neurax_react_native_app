@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { H2 } from '../../BaseViewStyles';
+import { H2, ModalContainer, ModalContent } from '../../BaseViewStyles';
 import { Modal } from 'react-native';
 import {  useBluetoothContext } from '../../../context/BluetoothContext';
-import { ModalContainer, ModalContent } from '../BluetoothConnectionErrorModal';
 import { BluetoothTestGyroscopeContentModal } from './BluetoothTestGyroscopeContentModal';
 import { GyroscopeMeasurementStateEnum } from '../../../domain/enum/GyroscopeMeasurementStateEnum';
 
@@ -10,10 +9,11 @@ export const BluetoothTestGyroscopeModal = () => {
   const {
     setShowTestGyroscopeModal, 
     showTestGyroscopeModal, 
-    wristAmplitude
+    wristAmplitude,
+    measureAmplitude
   } = useBluetoothContext();
 
-  const gyroscopeMeasurementTimeMS = 10000
+  const gyroscopeMeasurementTimeMS = 15000
 
   const [modalState, setModalState] = useState<GyroscopeMeasurementStateEnum>(GyroscopeMeasurementStateEnum.Instructions);
   const [measurementTimeout, setMeasurementTimeout] = useState<NodeJS.Timeout|undefined>();
@@ -33,6 +33,7 @@ export const BluetoothTestGyroscopeModal = () => {
 
   function initMeasurement() {
     setModalState(GyroscopeMeasurementStateEnum.Measuring)
+    measureAmplitude()
   }
 
   function cancelMeasurement() {    
