@@ -12,6 +12,7 @@ import { SessionContextProvider } from '../context/SessionContext';
 import { useTherapistContext } from '../context/TherapistContext';
 import { AppRoutesEnum } from './AppRoutesEnum';
 import { CameraScreen } from '../screens/CameraScreen';
+import { SessionListScreen } from '../screens/SessionListScreen';
 
 
 export function UnloggedRoutes(){
@@ -72,9 +73,9 @@ export function TherapistRoutes(){
               <SessionScreen/>
             </SessionContextProvider>
           );  
-        case AppRoutesEnum.Camera:
+        case AppRoutesEnum.SessionList:
             return(
-              <CameraScreen/>
+              <SessionListScreen/>
             );  
         default:
           return <div>Screen not found</div>;

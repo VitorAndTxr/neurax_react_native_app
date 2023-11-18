@@ -7,5 +7,6 @@ export enum AppRoutesEnum {
   PatientList = 'PatientList',
   PatientDetails = 'PatientDetails',
   NewPatient = 'NewPatient',
-  Camera = 'CameraScreen'
+  SessionList = 'SessionList',
+  SessionDetails = 'SessionDetails'
 }

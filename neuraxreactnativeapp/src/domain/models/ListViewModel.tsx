@@ -4,3 +4,8 @@ export interface PatientListViewModel {
     name: string;
     birthDate: Date;
 }
+
+export interface SessionListViewModel {
+    id: string;
+    creationDate: Date;
+}

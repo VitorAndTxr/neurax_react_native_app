@@ -3,7 +3,7 @@ import { AccountApplicationViewModel, AuthorizationResponseViewModel } from "../
 import ApiPaginatedResponse from "../../framework/domain/api/ApiPaginatedResponse";
 import ApiResponse from "../../framework/domain/api/ApiResponse";
 import ApiInterface from "../../framework/interface/ApiInterface";
-import { PatientListViewModel } from "../domain/models/PatientListViewModel";
+import { PatientListViewModel, SessionListViewModel } from "../domain/models/ListViewModel";
 import { PatientViewModel } from "../domain/models/PatientViewModel";
 import { PatientFormBody } from "../context/TherapistContext";
 
@@ -114,6 +114,16 @@ export default class PatientService {
         try {
             let endpoint = `/Patient/GetPatientId/${id}`;
             let response: AxiosResponse<ApiResponse<string>> = await ApiInterface.get(endpoint);
+            return response.data;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    public async getSessionsByPatientId(id: string): Promise<ApiResponse<SessionListViewModel[]> | undefined> {
+        try {
+            let endpoint =  `/Patient/${id}/Sessions`;
+            let response: AxiosResponse<ApiResponse<SessionListViewModel[]>> = await ApiInterface.get(endpoint);
             return response.data;
         } catch (error) {
             console.error(error);
