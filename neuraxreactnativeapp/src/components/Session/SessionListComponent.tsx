@@ -5,9 +5,17 @@ import { useTherapistContext } from '../../context/TherapistContext';
 import { useStackNavigatorContext } from '../../routes/StackNavigatorProvider';
 import Spinner from 'react-native-loading-spinner-overlay';
 
+export function BrTime (date: Date) : Date {
+  let dt = new Date(date);
+  dt.setHours(dt.getHours() - 3);
+  return dt;
+}
+
 export function SessionListComponent() {
   const {sessions, isLoading, onSelectPatient, resetPatientForm, setIsEditing} = useTherapistContext();
   const renderedSessions = [...sessions];
+
+  
   
   const { push } = useStackNavigatorContext()
   return (<View style={{
@@ -33,13 +41,13 @@ export function SessionListComponent() {
                 <View style={{ flexDirection: "row" }}>
                   <LoginTextLabel>Data:</LoginTextLabel>
                   <LoginTextLabel style={{ marginStart: 'auto' }}>
-                  {(new Date(session.creationDate)).toLocaleDateString()}
+                  {(BrTime(session.creationDate)).toLocaleDateString()}
                   </LoginTextLabel>
                 </View>
                 <View style={{ flexDirection: "row" }}>
                   <LoginTextLabel>Hora:</LoginTextLabel>
                   <LoginTextLabel style={{ marginStart: 'auto' }}>
-                    {(new Date(session.creationDate)).toLocaleTimeString()}
+                    {(BrTime(session.creationDate)).toLocaleTimeString('pt-BR')}
                   </LoginTextLabel>
                 </View>
               </CardStyle>
