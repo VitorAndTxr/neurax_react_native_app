@@ -4,7 +4,7 @@ import { Buffer } from "buffer";
 import { useAuthContext } from '../../framework/auth/AuthContextProvider';
 import TokenService from '../../framework/auth/TokenService';
 import PatientService from '../services/PatientService';
-import { PatientListViewModel } from '../domain/models/PatientListViewModel';
+import { PatientListViewModel, SessionListViewModel } from '../domain/models/ListViewModel';
 import { PatientViewModel } from '../domain/models/PatientViewModel';
 import { useStackNavigatorContext } from '../routes/StackNavigatorProvider';
 
@@ -27,6 +27,7 @@ export function TherapistContextProvider(props: TherapistContextProviderProps) {
     const {getDecodedToken} = useAuthContext();
     const {push, pop} = useStackNavigatorContext();
     const [patients, setPatients] = useState<PatientListViewModel[]>([])
+    const [sessions, setSessions] = useState<SessionListViewModel[]>([])
 
     
     const [selectedPatient, setSelectedPatient] = useState<PatientViewModel>({} as PatientViewModel);
@@ -218,12 +219,29 @@ export function TherapistContextProvider(props: TherapistContextProviderProps) {
         setIsLoading(false)
     }
 
+    async function onEnterSessionList(){
+        setIsLoading(true);
+
+        console.log(selectedPatient.id);
+        await patientService.getSessionsByPatientId(selectedPatient.id)
+            .then((response)=>{
+                if(response?.success){
+                    setSessions(response.result)
+                }
+            })
+            .catch((response)=>{
+
+            })
+        push('SessionList')
+        setIsLoading(false)
+        
+    }
 
 
     return (
         <>
             <TherapistContext.Provider value={{
-                patients, 
+                patients, sessions,
                 patientId, setPatientId, 
                 selectedPatient, setSelectedPatient, onSelectPatient,
                 showPatientSessionParameterModal, setShowPatientSessionParameterModal,
@@ -231,7 +249,7 @@ export function TherapistContextProvider(props: TherapistContextProviderProps) {
                 onChangeStringsPatientForm, 
                 isLoading, setIsLoading,
                 onChangeDateBirthPatientForm, resetPatientForm, onSavePatient, isEditing, setIsEditing, onPressEditPatient,
-                showDeletePatientModal, setShowDeletePatientModal, onDeletePatient,
+                showDeletePatientModal, setShowDeletePatientModal, onDeletePatient, onEnterSessionList
 
             }}>
                 {props.children}
@@ -245,6 +263,7 @@ export function useTherapistContext() {
 }
 interface TherapistContextData {
   patients: PatientListViewModel[];
+  sessions: SessionListViewModel[];
 
   patientId:string;
   setPatientId: React.Dispatch<React.SetStateAction<string>>;
@@ -274,6 +293,7 @@ interface TherapistContextData {
   onSavePatient:() => void // ação ao editar ou criar paciente
   onDeletePatient:() => void // ação ao editar ou criar paciente
   onPressEditPatient:() => void //chama tela editar paciente
+  onEnterSessionList:() => void
 }
 
 export enum PatientFormPropertyEnum{

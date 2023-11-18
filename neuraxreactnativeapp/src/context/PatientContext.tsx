@@ -4,7 +4,7 @@ import { Buffer } from "buffer";
 import { useAuthContext } from '../../framework/auth/AuthContextProvider';
 import TokenService from '../../framework/auth/TokenService';
 import PatientService from '../services/PatientService';
-import { PatientListViewModel } from '../domain/models/PatientListViewModel';
+import { PatientListViewModel } from '../domain/models/ListViewModel';
 import { PatientViewModel } from '../domain/models/PatientViewModel';
 import { useStackNavigatorContext } from '../routes/StackNavigatorProvider';
 

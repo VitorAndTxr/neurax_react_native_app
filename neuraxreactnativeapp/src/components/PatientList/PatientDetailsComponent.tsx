@@ -22,7 +22,8 @@ export function PatientDetailsComponent() {
     setShowDeletePatientModal,
     setShowPatientSessionParameterModal,
     showPatientSessionParameterModal,
-    setSelectedPatient
+    setSelectedPatient,
+    onEnterSessionList
   } = useTherapistContext();
 
   const patient = selectedPatient;
@@ -132,7 +133,7 @@ export function PatientDetailsComponent() {
                 </PrimaryGreenButton>
                         <CustomPrimaryButton
                             activeOpacity={1}
-                            onPress={()=>push('PatientList')}>
+                            onPress={()=>onEnterSessionList()}>
                             <RegularButtonText style={{fontSize:20}}>
                                 Histórico de Sessões
                             </RegularButtonText>
@@ -149,16 +150,16 @@ export function PatientDetailsComponent() {
                             <>
                               <CustomPrimaryRedButton
                                 activeOpacity={1}
-                                onPress={()=>push('PatientList')}>
-                                  <RegularButtonText  style={{fontSize:20}} onPress={()=>{disallowSessions()}}>
+                                onPress={()=>{disallowSessions()}}>
+                                  <RegularButtonText  style={{fontSize:20}}>
                                     Bloquear sessões
                                   </RegularButtonText>
                               </CustomPrimaryRedButton>
                             </>
                           ):(
                             <>
-                              <CustomPrimaryGreenButton>
-                                <RegularButtonText  style={{fontSize:20}} onPress={()=>{allowSessions()}}>
+                              <CustomPrimaryGreenButton  onPress={()=>{allowSessions()}}>
+                                <RegularButtonText  style={{fontSize:20}}>
                                     Liberar sessões
                                 </RegularButtonText>
                               </CustomPrimaryGreenButton>
