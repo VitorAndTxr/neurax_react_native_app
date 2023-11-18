@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { H2, InputLabel, PrimaryButton, PrimaryGreenButton, PrimaryRedButton, RegularButtonText } from '../../BaseViewStyles';
+import { H2, InputLabel, ModalContainer, ModalContent, PrimaryButton, PrimaryGreenButton, PrimaryRedButton, RegularButtonText } from '../../BaseViewStyles';
 import { Modal, View, SafeAreaView, ScrollView } from 'react-native';
 import { useBluetoothContext, NeuraXBluetoothProtocolBodyPropertyEnum } from '../../../context/BluetoothContext';
-import { ModalContainer, ModalContent } from '../../BluetoothSetup/BluetoothConnectionErrorModal';
 import Slider from "react-native-a11y-slider";
 import { Divider } from '@rneui/themed';
 import { useTherapistContext } from '../../../context/TherapistContext';
@@ -106,8 +105,8 @@ export const PatientSessionParametersModal = () => {
                   </InputLabel>
                   <Slider
                     min={5}
-                    max={12}
-                    increment={1}
+                    max={9}
+                    increment={0.5}
                     labelStyle={{}}
                     style={{ width: 250 }}
                     values={[(patientParams.amplitude)]}
@@ -117,7 +116,7 @@ export const PatientSessionParametersModal = () => {
                     }}
                     onChange={(value: number[]) => onChange(value,'amplitude')} />
                   <InputLabel>
-                    12V
+                    9V
                   </InputLabel>
                 </View>
               </View>
