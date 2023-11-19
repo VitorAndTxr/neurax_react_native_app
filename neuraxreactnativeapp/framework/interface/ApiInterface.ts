@@ -23,6 +23,8 @@ ApiInterface.interceptors.request.use(
         if(token === null|| token === undefined){
           tokenService.removeToken()
         }
+        console.log(token);
+        
         config = {
             ...config,
             headers:{

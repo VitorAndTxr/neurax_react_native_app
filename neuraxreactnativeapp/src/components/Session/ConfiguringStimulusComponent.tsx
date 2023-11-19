@@ -1,19 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSessionContext } from '../../context/SessionContext';
-import { H2, InputLabel, InstructionText, LoginTextLabel,  ModalContainer,  OverLapCard, PrimaryGreenButton, PrimaryRedButton, RegularButtonText } from '../BaseViewStyles';
-import { Modal, View } from 'react-native';
+import { H2, InputLabel, InstructionText, LoginTextLabel,  OverLapCard, PrimaryGreenButton, PrimaryRedButton, RegularButtonText } from '../BaseViewStyles';
+import { View } from 'react-native';
 import Slider from "react-native-a11y-slider";
 import { Divider } from '@rneui/base';
 import { ConfirmExitSessionModal } from './ConfirmExitSessionModal';
-import { FesInstructionsContentCompoent } from './FesInstructionsContentCompoent';
-import { WaitingTriggerContentCompoent } from './WaitingTriggerContentCompoent';
-import { FesStimulationContentCompoent } from './FesStimulationContentCompoent';
+import { StimulatingModal } from './StimulatingModal';
 
 export function ConfiguringStimulusComponent() {
 
-  const [difficulty, setDifficulty] = useState(1);
-  const [intensity, setIntensity] = useState(1);
-  const { repetitions } = useSessionContext();
+  const { 
+    repetitions,
+    difficulty,
+    setDifficulty,
+    intensity,
+    setIntensity,
+    showStimulationModal,
+    addRepetition
+  } = useSessionContext();
 
   return (
     <>
@@ -83,7 +87,7 @@ export function ConfiguringStimulusComponent() {
           </View>
         </OverLapCard>
         <PrimaryGreenButton
-          onPress={() => { }}
+          onPress={() => {addRepetition() }}
           style={{ marginVertical: 20 }}
         >
           <RegularButtonText>
@@ -98,56 +102,13 @@ export function ConfiguringStimulusComponent() {
           </RegularButtonText>
         </PrimaryRedButton>
       </View>
-      <StimulatingModal/>
+      {
+        showStimulationModal&&
+        <StimulatingModal/>
+      }
       <ConfirmExitSessionModal/>
     </>
   );
-}
-
-export function StimulatingModal(){
-  
-  const [modalState, setModalState] = useState(StimulatingModalState.Instructions);
-  
-  return (
-    <Modal transparent={true} visible={true} animationType="slide">
-      <ModalContainer>
-      {
-      <StimulatingModalContent      
-        modalState = {modalState}/>
-      }
-      </ModalContainer>
-    </Modal>
-  );
-};
-
-enum StimulatingModalState{
-  Instructions,
-  WaitingTrigger,
-  Stimulating
-}
-
-interface StimulatingModalContentProps{
-  modalState:StimulatingModalState
-}
-
-export function StimulatingModalContent({modalState}:StimulatingModalContentProps){
- switch (modalState) {
-  case StimulatingModalState.Instructions:
-    return(
-      <FesInstructionsContentCompoent/>
-    )
-  case StimulatingModalState.WaitingTrigger:
-    return(
-      <WaitingTriggerContentCompoent/>
-
-    )
-  case StimulatingModalState.Stimulating:
-    return(
-      <FesStimulationContentCompoent/>
-    )
-  default:
-    return<></>
- }
 }
 
 

@@ -7,12 +7,22 @@ import { GyroscopeMeasuringComponent } from '../BluetoothSetup/BluetoothTestGyro
 import { GyroscopeFinalResultsComponent } from '../BluetoothSetup/BluetoothTestGyroscopeModal/GyroscopeFinalResultsComponent';
 import { useSessionContext } from '../../context/SessionContext';
 import { SessionStateEnum } from '../../domain/enum/SessionStateEnum';
+import { useBluetoothContext } from '../../context/BluetoothContext';
 
 export function SessionWristMeasurementComponent() {
 
+  const { 
+    wristAmplitude,
+    measureWristAmplitude
+  } = useBluetoothContext()
+  
+  const { 
+    setSessionState,
+    addInitialWristMeasurement
+  } = useSessionContext()
+
   const gyroscopeMeasurementTimeMS = 10*1000
 
-  const {setSessionState} = useSessionContext()
   const [measurementTimeout, setMeasurementTimeout] = useState<NodeJS.Timeout|undefined>();
 
   const [modalState, setModalState] = useState<GyroscopeMeasurementStateEnum>(GyroscopeMeasurementStateEnum.Instructions);
@@ -31,10 +41,11 @@ export function SessionWristMeasurementComponent() {
   },[modalState])
 
   function startSession(){
-    setSessionState(SessionStateEnum.ConfiguringStimulus)
+    addInitialWristMeasurement(wristAmplitude)
   }
 
   function initMeasurement(){
+    measureWristAmplitude()
     setModalState(GyroscopeMeasurementStateEnum.Measuring)
   }
 
@@ -62,7 +73,7 @@ export function SessionWristMeasurementComponent() {
           initMeasurement={initMeasurement}
           cancelMeasurement={cancelMeasurement}
           restartMeasurement={restartMeasurement}
-          totalAmplitude={0} />
+          totalAmplitude={wristAmplitude} />
       </View>
     </>
   );

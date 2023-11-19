@@ -1,12 +1,8 @@
 import React, { ReactNode, createContext, useContext, useState, useEffect } from 'react';
-import AccountService from '../services/AccountService';
-import { Buffer } from "buffer";
 import { useAuthContext } from '../../framework/auth/AuthContextProvider';
-import TokenService from '../../framework/auth/TokenService';
-import PatientService from '../services/PatientService';
-import { PatientListViewModel } from '../domain/models/ListViewModel';
-import { PatientViewModel } from '../domain/models/PatientViewModel';
+import PatientService from "../services/PatientService";
 import { useStackNavigatorContext } from '../routes/StackNavigatorProvider';
+import { PatientViewModel } from '../domain/models/PatientViewModel';
 
 const patientService = new PatientService();
 
@@ -22,6 +18,8 @@ export function PatientContextProvider(props: PatientContextProviderProps) {
     const {push, pop} = useStackNavigatorContext();
 
     const [patientId, setPatientId] = useState('');
+    const [patient, setPatient] = useState<PatientViewModel|null>(null);
+
 
     useEffect(()=>{
         getDecodedToken().then((result) => {
@@ -30,6 +28,14 @@ export function PatientContextProvider(props: PatientContextProviderProps) {
                 .then((response)=>{
                     if(response?.success){
                         setPatientId(response.result)
+
+                        patientService.getPatientById(response.result).then(
+                            (getPatientResponse) => {
+                                if(getPatientResponse?.success){
+                                    setPatient(getPatientResponse.result)
+                                }
+                            }
+                        )
                     }
                 })
                 .catch((response)=>{
@@ -42,7 +48,10 @@ export function PatientContextProvider(props: PatientContextProviderProps) {
 
     return (
         <>
-            <PatientContext.Provider value={{ patientId, setPatientId
+            <PatientContext.Provider value={{ 
+                patientId, setPatientId,
+
+                patient, setPatient
             }}>
                 {props.children}
             </PatientContext.Provider>
@@ -56,5 +65,8 @@ export function usePatientContext() {
 interface PatientContextData {
   patientId:string;
   setPatientId: React.Dispatch<React.SetStateAction<string>>;
+
+  patient:PatientViewModel|null
+  setPatient:React.Dispatch<React.SetStateAction<PatientViewModel|null>>;
 }
 

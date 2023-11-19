@@ -9,8 +9,10 @@ import { Divider } from '@rneui/themed';
 export const BluetoothFesConfigModal = () => {
   const {
 
-    showFesTestModal, setShowFesTestModal,
-    fesParams, testFes,
+    showFesTestModal, 
+    setShowFesTestModal,
+    fesParams, 
+    testFes,
 
     onChange
   } = useBluetoothContext();

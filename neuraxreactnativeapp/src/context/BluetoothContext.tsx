@@ -43,8 +43,6 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
     const [showSEmgTestModal, setShowSEmgTestModal] = useState(false)
     const [showTestGyroscopeModal, setShowTestGyroscopeModal] = useState(false)
 
-
-
     useEffect(()=>{
         initBluetooth()
     },[])
@@ -116,17 +114,17 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
         }
     }
 
-    function measureAmplitude(){
+    function measureWristAmplitude(){
+
         let payload:NeuraXBluetoothProtocolPayload = {
             cd:NeuraXBluetoothProtocolFunctionEnum.GyroscopeReading,
             mt:NeuraXBluetoothProtocolMethodEnum.EXECUTE
         }
-        console.log(payload);
-        
+
         writeToBluetooth(JSON.stringify(payload))
     }
 
-    async function FesStimulation(){
+    async function sendFesParams(dificulty:number){
         let payload:NeuraXBluetoothProtocolPayload = {
             cd:NeuraXBluetoothProtocolFunctionEnum.FesParam,
             mt:NeuraXBluetoothProtocolMethodEnum.WRITE,
@@ -135,28 +133,25 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
                 f:fesParams.f,
                 pw:fesParams.pw,
                 pd:fesParams.pd,
-                df:5
+                df:fesParams.df
             }
         }
 
-        setTimeout(() => {
-            
-            writeToBluetooth(JSON.stringify(payload)).then(
-                ()=>{
-                    
-                    let payload2:NeuraXBluetoothProtocolPayload = {
-                        cd:NeuraXBluetoothProtocolFunctionEnum.SingleStimuli,
-                        mt:NeuraXBluetoothProtocolMethodEnum.EXECUTE,
-            
-                    }
-                    console.log(payload2);
-                    
-                    writeToBluetooth(JSON.stringify(payload2))
-                }
-            )
-        }, 100);
-        
+        await writeToBluetooth(JSON.stringify(payload))
+    }
 
+    async function SendFesSingleStimuli(){
+        let singleStimuliPayload:NeuraXBluetoothProtocolPayload = {
+            cd:NeuraXBluetoothProtocolFunctionEnum.SingleStimuli,
+            mt:NeuraXBluetoothProtocolMethodEnum.EXECUTE,
+
+        }
+        writeToBluetooth(JSON.stringify(singleStimuliPayload))
+    }
+
+    async function SingleFesStimulation(dificulty:number){
+        await sendFesParams(dificulty)
+        SendFesSingleStimuli()
     }
 
     async function writeToBluetooth(payload:string) {
@@ -249,8 +244,6 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
 
     function decodeMessage(message:string){
         let messageBody = JSON.parse(message) as NeuraXBluetoothProtocolPayload
-
-        console.log(messageBody);
         
 
         switch(messageBody[NeuraXBluetoothProtocolBodyFieldEnum.CODE]){
@@ -313,9 +306,7 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
     }
 
     function testFes():void{
-        console.log(fesParams);
-        FesStimulation()
-        
+        SingleFesStimulation(5)
     }
 
     return (
@@ -334,12 +325,15 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
 
                 selectedDevice,
                 setSelectedDevice,
-                FesStimulation,
+                SingleFesStimulation,
 
-                measureAmplitude,
                 connectBluetooth,
                 initBluetooth,
                 openBluetoothSettings,
+
+                measureWristAmplitude,
+                sendFesParams,
+
 
                 onChange,
                 testFes,
@@ -388,8 +382,9 @@ interface BluetoothContextData {
     disconnect:(address:string) => void
     openBluetoothSettings:() => void
     initBluetooth:() => void
-    measureAmplitude:() => void
-    FesStimulation:() => void
+    sendFesParams:(dificulty: number)=>void
+    measureWristAmplitude:() => void
+    SingleFesStimulation:(dificulty:number) => void
     connectBluetooth:(address:string) => void
 
     onChange:(values:number[], property:NeuraXBluetoothProtocolBodyPropertyEnum) => void

@@ -8,7 +8,7 @@ import { DeletePatientModal } from './DeletePatientModal';
 import React from 'react';
 import { PatientSessionParametersModal } from './Patient/PatientSessionParametersModal';
 import { AppRoutesEnum } from '../../routes/AppRoutesEnum';
-import PatientService from '../../services/PatientService';
+import PatientService from "../../services/TherapistService";
 
 const patientService = new PatientService();
 

@@ -1,15 +1,16 @@
 import React, { ReactNode, createContext, useContext, useState, useEffect } from 'react';
-import AccountService from '../services/AccountService';
-import { Buffer } from "buffer";
 import { useAuthContext } from '../../framework/auth/AuthContextProvider';
-import TokenService from '../../framework/auth/TokenService';
-import PatientService from '../services/PatientService';
+import TherapistService from "../services/TherapistService";
+import PatientService from "../services/PatientService";
+
 import { PatientListViewModel, SessionListViewModel } from '../domain/models/ListViewModel';
 import { PatientViewModel } from '../domain/models/PatientViewModel';
 import { useStackNavigatorContext } from '../routes/StackNavigatorProvider';
 import { SessionViewModel } from '../domain/models/SessionViewModel';
 
 const patientService = new PatientService();
+const therapistService = new TherapistService();
+
 
 
 const TherapistContext = createContext({} as TherapistContextData);
@@ -64,7 +65,7 @@ export function TherapistContextProvider(props: TherapistContextProviderProps) {
 
     function getPatients(){
 
-        patientService.getPatients()
+        therapistService.getPatients()
         .then((response)=>{
             if(response?.success){
                 setPatients(response.result)
@@ -164,7 +165,7 @@ export function TherapistContextProvider(props: TherapistContextProviderProps) {
             console.log("editar paciente")
             console.log(patientForm);
 
-            await patientService.editPatient(patientForm)
+            await therapistService.editPatient(patientForm)
             .then((response)=>{
                 if(response?.success){
                     console.log(response.result)
@@ -179,7 +180,7 @@ export function TherapistContextProvider(props: TherapistContextProviderProps) {
             console.log("criar paciente")
             console.log(patientForm);
 
-            await patientService.createPatient(patientForm)
+            await therapistService.createPatient(patientForm)
             .then((response)=>{
                 if(response?.success){
                     console.log(response.result)
@@ -206,7 +207,7 @@ export function TherapistContextProvider(props: TherapistContextProviderProps) {
         console.log("deletar paciente")
 
         console.log(selectedPatient.id);
-        await patientService.deletePatient(selectedPatient.id)
+        await therapistService.deletePatient(selectedPatient.id)
             .then((response)=>{
                 if(response?.success){
                     console.log(response.result)

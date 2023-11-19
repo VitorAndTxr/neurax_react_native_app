@@ -6,7 +6,7 @@ import Slider from "react-native-a11y-slider";
 import { Divider } from '@rneui/themed';
 import { useTherapistContext } from '../../../context/TherapistContext';
 import { SessionParametersViewModel } from "../../../domain/models/SessionParametersViewModel";
-import PatientService from '../../../services/PatientService';
+import PatientService from "../../../services/PatientService";
 
 const patientService = new PatientService();
 
@@ -31,13 +31,9 @@ export const PatientSessionParametersModal = () => {
   } )
 
   useEffect(()=>{
-    console.log("entro no modal");
     if(selectedPatient.parameters != null){
       setPatientParams(params)
     }
-    
-    
-
   },[selectedPatient])
 
   async function savePatientSessionParams(){

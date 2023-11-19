@@ -4,6 +4,7 @@ import { View } from 'react-native';
 
 
 export function FesInstructionsContentCompoent() {
+  
   return (
     <ModalContent style={{ maxHeight: 420 }}>
       <H2 style={{

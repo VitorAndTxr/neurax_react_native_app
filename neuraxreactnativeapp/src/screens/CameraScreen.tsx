@@ -3,8 +3,7 @@ import { View, Text, PermissionsAndroid, StyleSheet, Image, ScrollView, SafeArea
 import { H3, BaseViewStyles, BigButtonText, LoggedViewStyles, LoginButton, PrimaryButton, PrimaryGreenButton, PrimaryRedButton, RegularButtonText } from '../components/BaseViewStyles';
 import { useStackNavigatorContext } from '../routes/StackNavigatorProvider';
 import { Camera, useCameraDevice, useCameraDevices } from 'react-native-vision-camera';
-import PatientService from '../services/PatientService';
-import axios from 'axios';
+import PatientService from "../services/PatientService";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import styled from 'styled-components/native';
 import { usePatientContext } from '../context/PatientContext';
@@ -69,18 +68,17 @@ export function CameraScreen() {
     });
       
     //formData.append('file', base64Data)
-    console.log(patientId);
     formData.append('patientId', patientId);
     
-      await patientService.CreateSession(formData)
-      .then((response)=>{
-          if(response?.success){
-              console.log(response.result)
-          }
-      })
-      .catch((response)=>{
+    await patientService.CreateSession(formData)
+    .then((response)=>{
+        if(response?.success){
+            console.log(response.result)
+        }
+    })
+    .catch((response)=>{
 
-      })
+    })
   }
   /*onst uploadPhoto = async (uri: any) => {
     const formData = new FormData();
