@@ -119,6 +119,16 @@ export const H3 = styled.Text`
 
 `
 
+export const H4 = styled.Text`
+    color: #08415C;
+    text-align: center;
+    font-family:Inter_700Bold;
+    font-weight:700;
+    font-size:16px;
+    margin-bottom:30px;
+
+`
+
 export const BigButtonText = styled.Text`
 color: #FFF;
 text-align: center;
