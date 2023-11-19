@@ -37,8 +37,8 @@ export const BluetoothFesConfigModal = () => {
                   </InputLabel>
                   <Slider
                     min={5}
-                    max={10}
-                    increment={1}
+                    max={9}
+                    increment={0.5}
                     labelStyle={{}}
                     style={{ width: 250 }}
                     values={[(fesParams[NeuraXBluetoothProtocolBodyPropertyEnum.AMPLITUDE]!)]}
@@ -49,7 +49,7 @@ export const BluetoothFesConfigModal = () => {
                     onChange={(value: number[])=>onChange(value, NeuraXBluetoothProtocolBodyPropertyEnum.AMPLITUDE)}
                     />
                   <InputLabel>
-                    10V
+                    9V
                   </InputLabel>
                 </View>
               </View>

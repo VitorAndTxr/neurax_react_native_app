@@ -4,6 +4,7 @@ import { H3, LoginTextLabel, PrimaryButton, RegularButtonText, PrimaryGreenButto
 import { useTherapistContext } from '../../context/TherapistContext';
 import { useStackNavigatorContext } from '../../routes/StackNavigatorProvider';
 import Spinner from 'react-native-loading-spinner-overlay';
+import React from 'react';
 
 export function BrTime (date: Date) : Date {
   let dt = new Date(date);

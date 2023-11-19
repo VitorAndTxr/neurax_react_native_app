@@ -138,7 +138,6 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
                 df:5
             }
         }
-        console.log(payload);
 
         setTimeout(() => {
             
