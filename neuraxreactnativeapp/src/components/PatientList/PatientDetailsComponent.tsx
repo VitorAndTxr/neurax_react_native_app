@@ -80,7 +80,7 @@ export function PatientDetailsComponent() {
     }}>
       <SafeAreaView>
         <ScrollView>
-              <CardStyle onPress={() => push('PatientDetails')}>
+              <CardStyle activeOpacity={1}>
                 
                 <View style={{ flexDirection: "row" }}>
                   <LoginTextLabel>Nome:</LoginTextLabel>

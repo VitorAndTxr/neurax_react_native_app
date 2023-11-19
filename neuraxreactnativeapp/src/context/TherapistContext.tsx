@@ -7,6 +7,7 @@ import PatientService from '../services/PatientService';
 import { PatientListViewModel, SessionListViewModel } from '../domain/models/ListViewModel';
 import { PatientViewModel } from '../domain/models/PatientViewModel';
 import { useStackNavigatorContext } from '../routes/StackNavigatorProvider';
+import { SessionViewModel } from '../domain/models/SessionViewModel';
 
 const patientService = new PatientService();
 
@@ -31,6 +32,7 @@ export function TherapistContextProvider(props: TherapistContextProviderProps) {
 
     
     const [selectedPatient, setSelectedPatient] = useState<PatientViewModel>({} as PatientViewModel);
+    const [selectedSession, setSelectedSession] = useState<SessionViewModel>({} as SessionViewModel);
 
     const [patientId, setPatientId] = useState('');
 
@@ -232,8 +234,9 @@ export function TherapistContextProvider(props: TherapistContextProviderProps) {
             .catch((response)=>{
 
             })
-        push('SessionList')
         setIsLoading(false)
+        push('SessionList')
+        
         
     }
 
@@ -244,6 +247,7 @@ export function TherapistContextProvider(props: TherapistContextProviderProps) {
                 patients, sessions,
                 patientId, setPatientId, 
                 selectedPatient, setSelectedPatient, onSelectPatient,
+                selectedSession, setSelectedSession,
                 showPatientSessionParameterModal, setShowPatientSessionParameterModal,
                 patientForm, 
                 onChangeStringsPatientForm, 
@@ -270,6 +274,9 @@ interface TherapistContextData {
 
   selectedPatient: PatientViewModel;
   setSelectedPatient: React.Dispatch<React.SetStateAction<PatientViewModel>>
+
+  selectedSession: SessionViewModel;
+  setSelectedSession: React.Dispatch<React.SetStateAction<SessionViewModel>>
 
   patientForm: PatientFormBody;
   isLoading:boolean

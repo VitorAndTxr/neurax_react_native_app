@@ -5,13 +5,13 @@ import ApiResponse from "../../framework/domain/api/ApiResponse";
 import ApiInterface from "../../framework/interface/ApiInterface";
 import { PatientListViewModel } from "../domain/models/ListViewModel";
 import { PatientViewModel } from "../domain/models/PatientViewModel";
-import { PatientFormBody } from "../context/TherapistContext";
+import { SessionViewModel } from "../domain/models/SessionParametersViewModel";
 
 export default class SessionService {
-    public async getSessionsByPatientId(id: string): Promise<ApiResponse<PatientListViewModel[]> | undefined> {
+    public async getSessionsById(id: string): Promise<ApiResponse<SessionViewModel> | undefined> {
         try {
-            let endpoint = `/Therapist/GetPatients`;
-            let response: AxiosResponse<ApiResponse<PatientListViewModel[]>> = await ApiInterface.get(endpoint);
+            let endpoint = `/Session/${id}`;
+            let response: AxiosResponse<ApiResponse<SessionViewModel>> = await ApiInterface.get(endpoint);
             return response.data;
         } catch (error) {
             console.error(error);

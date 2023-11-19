@@ -5,6 +5,9 @@ import { useTherapistContext } from '../../context/TherapistContext';
 import { useStackNavigatorContext } from '../../routes/StackNavigatorProvider';
 import Spinner from 'react-native-loading-spinner-overlay';
 import React from 'react';
+import SessionService from '../../services/SessionService';
+
+const sessionService = new SessionService();
 
 export function BrTime (date: Date) : Date {
   let dt = new Date(date);
@@ -13,12 +16,30 @@ export function BrTime (date: Date) : Date {
 }
 
 export function SessionListComponent() {
-  const {sessions, isLoading, onSelectPatient, resetPatientForm, setIsEditing} = useTherapistContext();
+  const {sessions, isLoading, setIsLoading, setSelectedSession} = useTherapistContext();
   const renderedSessions = [...sessions];
 
-  
-  
   const { push } = useStackNavigatorContext()
+
+  async function onSelectSession(id: string){
+    setIsLoading(true)
+    await getSessionById(id);
+    push('SessionDetails')
+    setIsLoading(false)
+  }
+
+  async function getSessionById(guid: string){
+    await sessionService.getSessionsById(guid)
+    .then((response)=>{
+        if(response?.success){
+            console.log(response.result)
+            setSelectedSession(response.result)
+        }
+    })
+    .catch((response)=>{
+
+    })
+  }
   return (<View style={{
     justifyContent: 'center',
     flexDirection: 'col',
@@ -37,7 +58,7 @@ export function SessionListComponent() {
         <ScrollView>
           {renderedSessions.map((session) => {
             return (
-              <CardStyle key={session.id} onPress={() => {onSelectPatient(session.id)}}>
+              <CardStyle key={session.id} onPress={() => {onSelectSession(session.id)}}>
                 
                 <View style={{ flexDirection: "row" }}>
                   <LoginTextLabel>Data:</LoginTextLabel>
