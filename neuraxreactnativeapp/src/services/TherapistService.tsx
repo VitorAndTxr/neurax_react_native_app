@@ -74,7 +74,9 @@ export default class TherapistService {
             console.log(payload);
 
 
-            let response: AxiosResponse<ApiResponse<SessionViewModel>> = await ApiInterface.post(data,endpoint);
+            let response: AxiosResponse<ApiResponse<SessionViewModel>> = await ApiInterface.post(endpoint, payload);
+            console.log(response);
+
             return response.data;
         } catch (error) {
             console.log(error);

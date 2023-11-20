@@ -16,7 +16,8 @@ export function ConfiguringStimulusComponent() {
     intensity,
     setIntensity,
     showStimulationModal,
-    addRepetition
+    addRepetition,
+    setShowConfirmExitModal
   } = useSessionContext();
 
   return (
@@ -28,7 +29,7 @@ export function ConfiguringStimulusComponent() {
       </H2>
       <View style={{ flex: 1, justifyContent: 'center' }}>
         <InstructionText style={{ marginBottom: 10 }}>
-          Você esta iniciando a <InputLabel>{repetitions.length === 0 ? ("primeira repetição") : (repetitions.length + "ª repetição")}</InputLabel>
+          Você esta iniciando a <InputLabel>{repetitions.length === 0 ? ("primeira repetição") : (repetitions.length+1 + "ª repetição")}</InputLabel>
         </InstructionText>
         <InstructionText style={{ marginBottom: 10 }}>
           {`\u2023`} <InputLabel>Dificuldade</InputLabel> é a sensibilidade do gatilho
@@ -95,7 +96,7 @@ export function ConfiguringStimulusComponent() {
           </RegularButtonText>
         </PrimaryGreenButton>
         <PrimaryRedButton
-          onPress={() => { }}
+          onPress={() => {setShowConfirmExitModal(true) }}
         >
           <RegularButtonText>
             Finalizar sessão

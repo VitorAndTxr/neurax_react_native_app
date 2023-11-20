@@ -23,6 +23,7 @@ export function BluetoothTestGyroscopeContentModal({
         <GyroscopeFinalResultsComponent
           restartMeasurement={restartMeasurement}
           startSession={()=>{}}
+          finishSession={()=>{}}
           totalAmplitude={totalAmplitude} />
       );
     default:

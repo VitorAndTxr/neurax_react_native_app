@@ -8,7 +8,7 @@ import { useSessionContext } from '../../../context/SessionContext';
 
 export function GyroscopeInstructionsComponent({ initMeasurement }: BluetoothTestGyroscopeInstructionsComponentProps) {
   const {currentScreen} = useStackNavigatorContext()
-  const {cancelSession} = useSessionContext()
+  const {cancelSession, session} = useSessionContext()
   
   return (
     <>
@@ -42,7 +42,7 @@ export function GyroscopeInstructionsComponent({ initMeasurement }: BluetoothTes
         </RegularButtonText>
       </PrimaryButton>
       {
-        currentScreen===AppRoutesEnum.Session&&
+        currentScreen===AppRoutesEnum.Session&&session.startWristAmplitudeMeasurement===0&&
         <PrimaryRedButton
           onPress={()=>cancelSession()}
           style={{marginTop:20}}

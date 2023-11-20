@@ -1,4 +1,4 @@
-import { View, ScrollView, SafeAreaView, Text } from 'react-native';
+import { View, ScrollView, SafeAreaView, Text, ToastAndroid } from 'react-native';
 import styled from 'styled-components/native';
 import { H3, LoginTextLabel, PrimaryButton, RegularButtonText, PrimaryGreenButton, PrimaryRedButton } from '../BaseViewStyles';
 import { useTherapistContext } from '../../context/TherapistContext';
@@ -9,6 +9,7 @@ import React from 'react';
 import { PatientSessionParametersModal } from './Patient/PatientSessionParametersModal';
 import { AppRoutesEnum } from '../../routes/AppRoutesEnum';
 import PatientService from "../../services/TherapistService";
+import { useBluetoothContext } from '../../context/BluetoothContext';
 
 const patientService = new PatientService();
 
@@ -25,6 +26,8 @@ export function PatientDetailsComponent() {
     setSelectedPatient,
     onEnterSessionList
   } = useTherapistContext();
+
+  const {selectedDevice} = useBluetoothContext()
 
   const patient = selectedPatient;
   
@@ -66,6 +69,15 @@ export function PatientDetailsComponent() {
     //pop()
     setIsLoading(false)
   }
+
+  function initSession(){
+    if(selectedDevice){
+      push(AppRoutesEnum.Session)
+    }else{
+      ToastAndroid.show('É necessário estar conectado a um dispositivo bluetooth', ToastAndroid.CENTER);
+    }
+  }
+
   return (
   <View style={{
     justifyContent: 'center',
@@ -126,7 +138,7 @@ export function PatientDetailsComponent() {
                 <PrimaryGreenButton
                     //disabled={patient.parameters == null || !patient.sessionAllowed}
                     activeOpacity={1}
-                    onPress={()=>push(AppRoutesEnum.Session)}>
+                    onPress={()=>initSession()}>
                     <RegularButtonText  style={{fontSize:20}}>
                         Iniciar Sessão
                     </RegularButtonText>

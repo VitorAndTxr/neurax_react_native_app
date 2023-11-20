@@ -1,9 +1,11 @@
 import React from 'react';
 import { H2, InputLabel, InstructionText, ModalContent, PrimaryButton, RegularButtonText } from '../BaseViewStyles';
 import { View } from 'react-native';
+import { useSessionContext } from '../../context/SessionContext';
 
 
 export function FesInstructionsContentCompoent() {
+  const {startRepetition} = useSessionContext()
   
   return (
     <ModalContent style={{ maxHeight: 420 }}>
@@ -22,7 +24,7 @@ export function FesInstructionsContentCompoent() {
         {`\u2022`} Caso não seja detectada a tentativa de movimento, reduza a dificuldade.
       </InstructionText>
       <View style={{ flex: 1, justifyContent: 'center', flexDirection: 'row', marginTop:50 }}>
-        <PrimaryButton activeOpacity={1} onPress={() => { }}>
+        <PrimaryButton activeOpacity={1} onPress={startRepetition}>
           <RegularButtonText style={{ fontSize: 20 }}>
             Iniciar Estímulo
           </RegularButtonText>

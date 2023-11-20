@@ -12,11 +12,20 @@ import { StimulatingModalState } from "../components/Session/StimulatingModalSta
 import TherapistService from "../services/TherapistService";
 import PatientService from "../services/PatientService";
 import { NeuraXBluetoothProtocolBodyPropertyEnum, useBluetoothContext } from "./BluetoothContext";
+import SessionService from "../services/SessionService";
+import { ToastAndroid } from "react-native";
+import SegmentService from "../services/SegmentService";
 
 
 const therapistService = new TherapistService();
 
 const patientService = new PatientService();
+
+const sessionService = new SessionService();
+
+const segmentService = new SegmentService();
+
+
 
 const SessionContext = createContext({} as SessionContextData)
 
@@ -39,10 +48,18 @@ export function SessionContextProvider({
 
     const {
         setFesParams, 
-        wristAmplitude
+        wristAmplitude,
+        sendFesParams,
+        startSession,
+        stopSession,
+        resumeSession,
+        pauseSession
     } = useBluetoothContext()
 
     const [sessionState, setSessionState] = useState<SessionStateEnum>(SessionStateEnum.ConfiguringStimulus);
+
+    const [stimulatingTimeout, setStimulatingTimeout] = useState<NodeJS.Timeout|null>(null);
+
 
     const [repetitions, setRepetitions] = useState<SessionSegmentViewModel[]>([]);
 
@@ -51,6 +68,8 @@ export function SessionContextProvider({
     const [intensity, setIntensity] = useState(1);
 
     const [showStimulationModal, setShowStimulationModal] = useState(false);
+    const [showConfirmExitModal, setShowConfirmExitModal] = useState(false);
+
 
     const [stimulationModalState, setStimulationModalState] = useState(StimulatingModalState.Instructions);
 
@@ -82,7 +101,7 @@ export function SessionContextProvider({
             let response = await therapistService.createSession({
                 patientId:patient.id,
                 wristAmplitudeMeasurement:amplitude
-            })
+            })            
             if(response?.success){
                 setSession(response.result)
                 setSessionState(SessionStateEnum.ConfiguringStimulus)
@@ -110,9 +129,20 @@ export function SessionContextProvider({
             [NeuraXBluetoothProtocolBodyPropertyEnum.DIFFICULTY]:           difficulty,
             [NeuraXBluetoothProtocolBodyPropertyEnum.STIMULI_DURATION]:     patient.parameters.stimulationTime
         })
+
+        await startSession()
+        await pauseSession()
     }
 
-    function addFinalWristMeasurement(amplitude:number){
+    async function addFinalWristMeasurement(amplitude:number){
+
+        let response = await sessionService.finishSession({
+            sessionId:session.id,
+            wristAmplitudeMeasurement:amplitude
+        })
+
+        console.log('addFinalWristMeasurement:',response);
+        
         setSession(
             current =>{
                 return{
@@ -121,16 +151,41 @@ export function SessionContextProvider({
                 }
             }
         )
+        pop()
     }
     
     
     function addRepetition(){
 
+        let pulseWidth = patient.parameters.minPulseWidth+((patient.parameters.maxPulseWidth-patient.parameters.minPulseWidth)/10)*intensity
 
+        setFesParams(current =>{
+
+            current[NeuraXBluetoothProtocolBodyPropertyEnum.DIFFICULTY] = difficulty
+            current[NeuraXBluetoothProtocolBodyPropertyEnum.PULSE_WIDTH] = pulseWidth            
+
+            return current
+        })
+
+        sendFesParams(5)
+        setStimulationModalState(StimulatingModalState.Instructions)
+        setShowStimulationModal(true)
+    }
+
+    async function startRepetition(){
+        let response = await sessionService.addSessionSegment({
+            sessionId:session.id,
+            difficulty:difficulty,
+            intensity:intensity
+        })
+        
+        if(response?.success){
+        }
         setRepetitions(currentRepetitions =>{
             let repetitions = [...currentRepetitions]
 
             let newRepetition:SessionSegmentViewModel = {
+                id:response!.result.id,
                 intensity:intensity,
                 difficulty:difficulty,
                 status:SessionSegmentStatusEnum.Untriggered
@@ -140,25 +195,28 @@ export function SessionContextProvider({
 
             return repetitions
         })
+        // mandar requisição pra ESP
+        await resumeSession()
 
-        //mandar requisição bluetooth de configuração pro bluetooth
-        setStimulationModalState(StimulatingModalState.Instructions)
-        setShowStimulationModal(true)
+        setStimulationModalState(StimulatingModalState.WaitingTrigger)
     }
 
     function cancelRepetition(){
-        setRepetitions(currentRepetitions =>{
-            let repetitions = [...currentRepetitions]
-
-            repetitions[repetitions.length-1].status = SessionSegmentStatusEnum.Canceled
-
-            return repetitions
-        })
         setShowStimulationModal(false)
         setSessionState(SessionStateEnum.ConfiguringStimulus)
+
     }
 
-    function emergencyStopRepetition(){
+    async function emergencyStopRepetition(){
+        if(stimulatingTimeout){
+            clearTimeout(stimulatingTimeout)
+            setStimulatingTimeout(null)
+        }
+
+
+
+        await pauseSession()
+
         setRepetitions(currentRepetitions =>{
             let repetitions = [...currentRepetitions]
 
@@ -166,12 +224,20 @@ export function SessionContextProvider({
 
             return repetitions
         })
+        ToastAndroid.show('Parada de emergência solicitada', ToastAndroid.CENTER);
+        
         setSessionState(SessionStateEnum.ConfiguringStimulus)
+        setShowStimulationModal(false)
+        segmentService.emergencyStop(repetitions[repetitions.length-1].id)
+        
     }
     
-
     function cancelSession(){
         pop()
+    }
+
+    function finishSession(){
+        setSessionState(SessionStateEnum.MeasureWrist)
     }
     return (
         <>
@@ -186,13 +252,18 @@ export function SessionContextProvider({
                 intensity, setIntensity,
                 showStimulationModal, setShowStimulationModal,
                 stimulationModalState, setStimulationModalState,
+                stimulatingTimeout, setStimulatingTimeout,
+                showConfirmExitModal, setShowConfirmExitModal,
 
                 addInitialWristMeasurement,
                 addFinalWristMeasurement,
                 addRepetition,
+                startRepetition,
                 cancelRepetition,
                 emergencyStopRepetition,
-                cancelSession
+                cancelSession,
+
+                finishSession
 
             }}>
                 {
@@ -229,14 +300,24 @@ interface SessionContextData {
     showStimulationModal:boolean
     setShowStimulationModal:React.Dispatch<React.SetStateAction<boolean>>
 
+    showConfirmExitModal:boolean 
+    setShowConfirmExitModal:React.Dispatch<React.SetStateAction<boolean>>
+
     stimulationModalState:StimulatingModalState
     setStimulationModalState:React.Dispatch<React.SetStateAction<StimulatingModalState>>
 
+    stimulatingTimeout:NodeJS.Timeout|null
+    setStimulatingTimeout:React.Dispatch<React.SetStateAction<NodeJS.Timeout|null>>
+
     addRepetition:()=>void
+    startRepetition:()=>Promise<void>
+
     cancelRepetition:()=>void
     emergencyStopRepetition:()=>void
     cancelSession:()=>void
 
+    finishSession:()=>void
+
     addInitialWristMeasurement:(amplitude:number)=>Promise<void>
-    addFinalWristMeasurement:(amplitude:number)=>void
+    addFinalWristMeasurement:(amplitude:number)=>Promise<void>
 }

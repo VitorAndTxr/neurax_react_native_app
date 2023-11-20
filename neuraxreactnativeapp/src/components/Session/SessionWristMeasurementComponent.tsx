@@ -18,7 +18,8 @@ export function SessionWristMeasurementComponent() {
   
   const { 
     setSessionState,
-    addInitialWristMeasurement
+    addInitialWristMeasurement,
+    addFinalWristMeasurement
   } = useSessionContext()
 
   const gyroscopeMeasurementTimeMS = 10*1000
@@ -58,6 +59,9 @@ export function SessionWristMeasurementComponent() {
   function restartMeasurement(){
     setModalState(GyroscopeMeasurementStateEnum.Instructions) 
   }
+  function finishSession(){
+    addFinalWristMeasurement(wristAmplitude)
+  }
   
   return (
     <>
@@ -70,6 +74,7 @@ export function SessionWristMeasurementComponent() {
         <SessionWristMeasurementContentComponent
           modalState={modalState}
           startSession={startSession}
+          finishSession={finishSession}
           initMeasurement={initMeasurement}
           cancelMeasurement={cancelMeasurement}
           restartMeasurement={restartMeasurement}
@@ -82,6 +87,7 @@ export function SessionWristMeasurementComponent() {
 export function SessionWristMeasurementContentComponent({
   modalState, 
   startSession, 
+  finishSession,
   initMeasurement,
   cancelMeasurement, 
   restartMeasurement, 
@@ -103,6 +109,7 @@ export function SessionWristMeasurementContentComponent({
       return (
         <GyroscopeFinalResultsComponent
           startSession={startSession}
+          finishSession={finishSession}
           restartMeasurement={restartMeasurement}
           totalAmplitude={totalAmplitude} />
       );
@@ -118,4 +125,5 @@ interface SessionWristMeasurementContentComponentProps {
   cancelMeasurement: () => void;
   restartMeasurement: () => void;
   startSession: () => void;
+  finishSession: () => void;
 }

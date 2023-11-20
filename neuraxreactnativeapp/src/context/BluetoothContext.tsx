@@ -35,7 +35,7 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
 
     const [triggerDettected, setTriggerDetected] = useState(false)
 
-    const [wristAmplitude, setWristAmplitude] = useState(0)
+    const [wristAmplitude, setWristAmplitude] = useState(5)
 
 
     const [showConnectionErrorModal, setShowConnectionErrorModal] = useState(false)
@@ -136,7 +136,6 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
                 df:fesParams.df
             }
         }
-
         await writeToBluetooth(JSON.stringify(payload))
     }
 
@@ -154,8 +153,60 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
         SendFesSingleStimuli()
     }
 
+    async function startSession(){
+        let singleStimuliPayload:NeuraXBluetoothProtocolPayload = {
+            cd:NeuraXBluetoothProtocolFunctionEnum.StartSession,
+            mt:NeuraXBluetoothProtocolMethodEnum.EXECUTE,
+
+        }
+        await writeToBluetooth(JSON.stringify(singleStimuliPayload))
+
+    }
+
+    async function pauseSession(){
+        let singleStimuliPayload:NeuraXBluetoothProtocolPayload = {
+            cd:NeuraXBluetoothProtocolFunctionEnum.PauseSession,
+            mt:NeuraXBluetoothProtocolMethodEnum.EXECUTE,
+
+        }
+        await writeToBluetooth(JSON.stringify(singleStimuliPayload))
+
+    }
+
+    async function resumeSession(){
+        let singleStimuliPayload:NeuraXBluetoothProtocolPayload = {
+            cd:NeuraXBluetoothProtocolFunctionEnum.ResumeSession,
+            mt:NeuraXBluetoothProtocolMethodEnum.EXECUTE,
+
+        }
+        await writeToBluetooth(JSON.stringify(singleStimuliPayload))
+
+    }
+
+    async function stopSession(){
+        let singleStimuliPayload:NeuraXBluetoothProtocolPayload = {
+            cd:NeuraXBluetoothProtocolFunctionEnum.StopSession,
+            mt:NeuraXBluetoothProtocolMethodEnum.EXECUTE,
+
+        }
+        await writeToBluetooth(JSON.stringify(singleStimuliPayload))
+
+    }
+
+    async function startTrigger(){
+        let singleStimuliPayload:NeuraXBluetoothProtocolPayload = {
+            cd:NeuraXBluetoothProtocolFunctionEnum.Trigger,
+            mt:NeuraXBluetoothProtocolMethodEnum.EXECUTE,
+
+        }
+        await writeToBluetooth(JSON.stringify(singleStimuliPayload))
+
+    }
+
     async function writeToBluetooth(payload:string) {
         try {
+            console.log("writeToBluetoothPayload:",payload);
+            
             let response = await RNBluetoothClassic.writeToDevice(selectedDevice!.address, payload+'\0')
         } catch (error) {
             console.log(error,'BluetoothContext.writeToBluetooth.Error')
@@ -257,7 +308,10 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
                 console.log("Status");
                 break;
             case NeuraXBluetoothProtocolFunctionEnum.Trigger:
-                console.log("Trigger");
+                setTriggerDetected(true)
+                break;
+            case NeuraXBluetoothProtocolFunctionEnum.PauseSession:
+                console.log("Pause");
                 break;
             default:
                 break;
@@ -331,6 +385,12 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
                 initBluetooth,
                 openBluetoothSettings,
 
+                startSession,
+                pauseSession,
+                resumeSession,
+                stopSession,
+                startTrigger,
+
                 measureWristAmplitude,
                 sendFesParams,
 
@@ -386,6 +446,13 @@ interface BluetoothContextData {
     measureWristAmplitude:() => void
     SingleFesStimulation:(dificulty:number) => void
     connectBluetooth:(address:string) => void
+
+    startSession:() => Promise<void>
+    pauseSession:() => Promise<void>
+    resumeSession:() => Promise<void>
+    stopSession:() => Promise<void>
+    startTrigger:() => Promise<void>
+
 
     onChange:(values:number[], property:NeuraXBluetoothProtocolBodyPropertyEnum) => void
 

@@ -62,8 +62,8 @@ export const PatientSessionParametersModal = () => {
       setPatientParams(currentParams =>{                        
         return {
         ...currentParams,
-        minPulseWidth: (values[0] < values[1]) ? values[0] : values[1],
-        maxPulseWidth: (values[0] > values[1]) ? values[0] : values[1],
+        minPulseWidth: (values[0]),
+        maxPulseWidth: (values[1]),
         }
       })
       return

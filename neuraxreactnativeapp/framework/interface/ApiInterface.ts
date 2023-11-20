@@ -22,9 +22,7 @@ ApiInterface.interceptors.request.use(
         
         if(token === null|| token === undefined){
           tokenService.removeToken()
-        }
-        console.log(token);
-        
+        }        
         config = {
             ...config,
             headers:{
@@ -57,7 +55,7 @@ ApiInterface.interceptors.response.use(
     if (error.response.status === 403) {
         console.error("ApiInterface:","Acesso não permitido");
     }
-    if (error.response.status === 404) {
+    if (error.response.status === 404) {        
         console.error("ApiInterface:","Houve um erro, favor tentar novamente mais tarde");
     }
     return error;
