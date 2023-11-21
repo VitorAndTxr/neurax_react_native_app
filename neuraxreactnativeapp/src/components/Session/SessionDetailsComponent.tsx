@@ -19,7 +19,8 @@ export function SessionDetailsComponent() {
     onEnterSessionList
   } = useTherapistContext();
 
-  const session = selectedSession;
+  const session = {...selectedSession};
+
   
   const { push } = useStackNavigatorContext()
   const [stateModal, setStateModal] = useState(false);
@@ -87,29 +88,43 @@ export function SessionDetailsComponent() {
                     {session.repetitions}
                   </LoginTextLabel>
                 </View>
-
-                <CustomPrimaryButton style={{marginTop: 20}}
+                {
+                  session.photos.length > 0 &&
+                  <CustomPrimaryButton style={{marginTop: 20}}
                     activeOpacity={1}
                     onPress={()=>setStateModal(true)}>
                     <RegularButtonText style={{fontSize:20}}>
                         Ver Fotos
                     </RegularButtonText>
-                </CustomPrimaryButton>
+                  </CustomPrimaryButton>
+                }
               </CardStyle>
               <H4 style={{marginBottom: '15px'}}>Repetições</H4>
               {session.segments.map((segment) => {
                 return (
                   <CardStyle key={segment.id} activeOpacity={1}>
                     <View style={{ flexDirection: "row" }}>
-                      <LoginTextLabel>Data:</LoginTextLabel>
+                      <LoginTextLabel>Intensidade:</LoginTextLabel>
                       <LoginTextLabel style={{ marginStart: 'auto' }}>
-                        ?
+                        {segment.intensity}
                       </LoginTextLabel>
                     </View>
                     <View style={{ flexDirection: "row" }}>
-                      <LoginTextLabel>Hora:</LoginTextLabel>
+                      <LoginTextLabel>Dificuldade:</LoginTextLabel>
                       <LoginTextLabel style={{ marginStart: 'auto' }}>
-                        ?
+                      {segment.difficulty}
+                      </LoginTextLabel>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <LoginTextLabel>Detectado Smg:</LoginTextLabel>
+                      <LoginTextLabel style={{ marginStart: 'auto' }}>
+                      {segment.smgDetected ? "Sim" : "Não"}
+                      </LoginTextLabel>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <LoginTextLabel>Emergência:</LoginTextLabel>
+                      <LoginTextLabel style={{ marginStart: 'auto' }}>
+                      {segment.emergency ? "Sim" : "Não"}
                       </LoginTextLabel>
                     </View>
                   </CardStyle>
@@ -128,7 +143,10 @@ export function SessionDetailsComponent() {
                   <ModalContainer>
                     <ModalContent style={{ maxHeight: 550 }}>
                       <View style={{ flex: 1, height: 450, width: 280 }}>
-                        <Image style={StyleSheet.absoluteFill} source={{uri: session.photos.at(indicePhoto).path}}></Image>
+                        {
+                          session.photos.length > 0 &&
+                          <Image style={StyleSheet.absoluteFill} source={{uri: session.photos?.at(indicePhoto).path}}></Image>
+                        }
                       </View>
                       {
                         session.photos.length > 1 &&
