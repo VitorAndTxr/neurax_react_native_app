@@ -44,6 +44,45 @@ export function GyroscopeMeasuringComponent({ cancelMeasurement }: BluetoothTest
   );
 }
 
+export function GyroscopeCalibrationComponent({ cancelMeasurement }: BluetoothTestGyroscopeMeasuringComponentProps) {
+  
+  const {currentScreen} = useStackNavigatorContext()
+  
+  const [counter, setCounter] = useState(2);
+
+  useEffect(() => {
+    setTimeout(() => setCounter(counter - 1), 1000);
+  }, []);
+
+  useEffect(() => {
+    counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
+  }, [counter]);
+
+  return (
+    <>
+    {
+      currentScreen===AppRoutesEnum.BluetoothSetup&&<Divider style={{ marginVertical: 10 }} />
+    }
+      <View style={{ justifyContent: 'center', height: 200 }}>
+        <LoginTextLabel>
+          Calibrando...
+        </LoginTextLabel>
+        <LoginTextLabel>
+          Mantenha sua mão em repouso
+        </LoginTextLabel>
+      </View>
+      <Divider style={{ marginVertical: 5 }} />
+      <PrimaryRedButton
+        onPress={cancelMeasurement}
+      >
+        <RegularButtonText>
+          Cancelar medida
+        </RegularButtonText>
+      </PrimaryRedButton>
+    </>
+  );
+}
+
 interface BluetoothTestGyroscopeMeasuringComponentProps {
   cancelMeasurement: () => void;
 }

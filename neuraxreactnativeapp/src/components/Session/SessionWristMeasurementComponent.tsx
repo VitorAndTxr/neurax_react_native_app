@@ -3,7 +3,7 @@ import { H2 } from '../BaseViewStyles';
 import { GyroscopeMeasurementStateEnum } from '../../domain/enum/GyroscopeMeasurementStateEnum';
 import { GyroscopeInstructionsComponent } from '../BluetoothSetup/BluetoothTestGyroscopeModal/GyroscopeInstructionsComponent';
 import { View } from 'react-native';
-import { GyroscopeMeasuringComponent } from '../BluetoothSetup/BluetoothTestGyroscopeModal/GyroscopeMeasuringComponent';
+import { GyroscopeCalibrationComponent, GyroscopeMeasuringComponent } from '../BluetoothSetup/BluetoothTestGyroscopeModal/GyroscopeMeasuringComponent';
 import { GyroscopeFinalResultsComponent } from '../BluetoothSetup/BluetoothTestGyroscopeModal/GyroscopeFinalResultsComponent';
 import { useSessionContext } from '../../context/SessionContext';
 import { SessionStateEnum } from '../../domain/enum/SessionStateEnum';
@@ -22,6 +22,8 @@ export function SessionWristMeasurementComponent() {
     addFinalWristMeasurement
   } = useSessionContext()
 
+  const gyroscopeCalibrationTimeMS = 2*1000
+
   const gyroscopeMeasurementTimeMS = 10*1000
 
   const [measurementTimeout, setMeasurementTimeout] = useState<NodeJS.Timeout|undefined>();
@@ -38,6 +40,17 @@ export function SessionWristMeasurementComponent() {
       , gyroscopeMeasurementTimeMS)
 
       setMeasurementTimeout(timeOut)
+      return
+    }
+    if(modalState===GyroscopeMeasurementStateEnum.Calibration){
+
+      const timeOut = setTimeout(
+      ()=>{
+        setModalState(GyroscopeMeasurementStateEnum.Measuring)
+      }
+      , gyroscopeCalibrationTimeMS)
+
+      setMeasurementTimeout(timeOut)
     }
   },[modalState])
 
@@ -47,7 +60,7 @@ export function SessionWristMeasurementComponent() {
 
   function initMeasurement(){
     measureWristAmplitude()
-    setModalState(GyroscopeMeasurementStateEnum.Measuring)
+    setModalState(GyroscopeMeasurementStateEnum.Calibration)
   }
 
   function cancelMeasurement(){
@@ -99,6 +112,11 @@ export function SessionWristMeasurementContentComponent({
       return (
         <GyroscopeInstructionsComponent
           initMeasurement={initMeasurement} />
+      );
+    case GyroscopeMeasurementStateEnum.Calibration:
+      return (
+        <GyroscopeCalibrationComponent
+          cancelMeasurement={cancelMeasurement} />
       );
     case GyroscopeMeasurementStateEnum.Measuring:
       return (
