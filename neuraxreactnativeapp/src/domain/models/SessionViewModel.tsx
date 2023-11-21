@@ -15,5 +15,8 @@ export interface PhotoViewModel{
 }
 
 export interface SegmentViewModel{
-  id: string;
+  intensity: number;
+  difficulty: number;
+  smgDetected: boolean | null;
+  emergency: boolean | null;
 }
