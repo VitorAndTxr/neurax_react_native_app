@@ -23,7 +23,7 @@ export function GyroscopeFinalResultsComponent({
       }
       <View style={{ justifyContent: 'center', height: 200 }}>
         <H2>
-          Amplitude Máxima:{totalAmplitude}º
+          Amplitude Máxima:{totalAmplitude.toFixed(2)}º
         </H2>
       </View>
       {

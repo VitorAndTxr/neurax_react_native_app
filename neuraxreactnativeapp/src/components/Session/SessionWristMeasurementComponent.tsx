@@ -22,7 +22,7 @@ export function SessionWristMeasurementComponent() {
     addFinalWristMeasurement
   } = useSessionContext()
 
-  const gyroscopeCalibrationTimeMS = 2*1000
+  const gyroscopeCalibrationTimeMS = 4*1000
 
   const gyroscopeMeasurementTimeMS = 10*1000
 

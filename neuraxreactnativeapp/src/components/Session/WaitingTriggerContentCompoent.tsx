@@ -16,13 +16,15 @@ export function WaitingTriggerContentCompoent() {
     emergencyStopRepetition,
     setStimulatingTimeout,
     stimulatingTimeout,
-    repetitions
+    repetitions,
+    
 
   } = useSessionContext()
 
   const { 
     triggerDettected,
-    setTriggerDetected 
+    setTriggerDetected,
+    pauseSession 
   } = useBluetoothContext()
 
   const [counter, setCounter] = useState(10);
@@ -57,6 +59,7 @@ export function WaitingTriggerContentCompoent() {
       setStimulatingTimeout(null)
       setShowStimulationModal(false)
       setStimulationModalState(StimulatingModalState.Instructions)
+      pauseSession()
       showToast()
     }
   }, [counter]);

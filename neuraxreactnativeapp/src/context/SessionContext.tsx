@@ -131,7 +131,7 @@ export function SessionContextProvider({
         })
 
         await startSession()
-        await pauseSession()
+        //await pauseSession()
     }
 
     async function addFinalWristMeasurement(amplitude:number){
