@@ -129,9 +129,6 @@ export function SessionContextProvider({
             [NeuraXBluetoothProtocolBodyPropertyEnum.DIFFICULTY]:           difficulty,
             [NeuraXBluetoothProtocolBodyPropertyEnum.STIMULI_DURATION]:     patient.parameters.stimulationTime
         })
-
-        await startSession()
-        //await pauseSession()
     }
 
     async function addFinalWristMeasurement(amplitude:number){
@@ -157,12 +154,12 @@ export function SessionContextProvider({
     
     function addRepetition(){
 
-        let pulseWidth = patient.parameters.minPulseWidth+((patient.parameters.maxPulseWidth-patient.parameters.minPulseWidth)/10)*intensity
+        let pulseWidth = patient.parameters.minPulseWidth+((patient.parameters.maxPulseWidth-patient.parameters.minPulseWidth)/9)*(intensity-1)
 
         setFesParams(current =>{
 
             current[NeuraXBluetoothProtocolBodyPropertyEnum.DIFFICULTY] = difficulty
-            current[NeuraXBluetoothProtocolBodyPropertyEnum.PULSE_WIDTH] = pulseWidth            
+            current[NeuraXBluetoothProtocolBodyPropertyEnum.PULSE_WIDTH] = Math.round(pulseWidth)
 
             return current
         })
@@ -173,32 +170,42 @@ export function SessionContextProvider({
     }
 
     async function startRepetition(){
-        let response = await sessionService.addSessionSegment({
-            sessionId:session.id,
-            difficulty:difficulty,
-            intensity:intensity
-        })
-        
-        if(response?.success){
-        }
-        setRepetitions(currentRepetitions =>{
-            let repetitions = [...currentRepetitions]
-
-            let newRepetition:SessionSegmentViewModel = {
-                id:response!.result.id,
-                intensity:intensity,
+        try {
+            let response = await sessionService.addSessionSegment({
+                sessionId:session.id,
                 difficulty:difficulty,
-                status:SessionSegmentStatusEnum.Untriggered
+                intensity:intensity
+            })
+            
+            if(response?.success){
+                if(repetitions.length ===0){
+                    await startSession()
+                }
+                else{
+                    await resumeSession()
+                }
+        
+                setRepetitions(currentRepetitions =>{
+                    let repetitions = [...currentRepetitions]
+        
+                    let newRepetition:SessionSegmentViewModel = {
+                        id:response!.result.id,
+                        intensity:intensity,
+                        difficulty:difficulty,
+                        status:SessionSegmentStatusEnum.Untriggered
+                    }
+        
+                    repetitions.push(newRepetition)            
+        
+                    return repetitions
+                })
+                // mandar requisição pra ESP
+        
+                setStimulationModalState(StimulatingModalState.WaitingTrigger)
             }
-
-            repetitions.push(newRepetition)            
-
-            return repetitions
-        })
-        // mandar requisição pra ESP
-        await resumeSession()
-
-        setStimulationModalState(StimulatingModalState.WaitingTrigger)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     function cancelRepetition(){
@@ -237,6 +244,7 @@ export function SessionContextProvider({
     }
 
     function finishSession(){
+        stopSession()
         setSessionState(SessionStateEnum.MeasureWrist)
     }
     return (
