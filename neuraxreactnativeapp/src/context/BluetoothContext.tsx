@@ -34,6 +34,8 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
     })
 
     const [triggerDettected, setTriggerDetected] = useState(false)
+    const [emergencyStop, setEmergencyStop] = useState(false)
+
 
     const [wristAmplitude, setWristAmplitude] = useState(5)
 
@@ -54,6 +56,14 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
             }, triggerUpTimems)
         }
     },[triggerDettected])
+
+    useEffect(()=>{
+        if(emergencyStop){
+            setTimeout(()=>{
+                setEmergencyStop(false)
+            }, triggerUpTimems)
+        }
+    },[emergencyStop])
 
     useEffect(()=>{
     },[selectedDevice])
@@ -313,6 +323,9 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
             case NeuraXBluetoothProtocolFunctionEnum.PauseSession:
                 console.log("Pause");
                 break;
+            case NeuraXBluetoothProtocolFunctionEnum.EmergencyStop:
+                setEmergencyStop(true)
+                break;
             default:
                 break;
 
@@ -393,7 +406,7 @@ export function BluetoothContextProvider(props: BluetoothContextProviderProps) {
 
                 measureWristAmplitude,
                 sendFesParams,
-
+                emergencyStop,setEmergencyStop,
 
                 onChange,
                 testFes,
@@ -423,6 +436,9 @@ interface BluetoothContextData {
 
     triggerDettected:boolean
     setTriggerDetected:React.Dispatch<React.SetStateAction<boolean>>
+
+    emergencyStop:boolean
+    setEmergencyStop:React.Dispatch<React.SetStateAction<boolean>>
 
     showFesTestModal:boolean
     setShowFesTestModal:React.Dispatch<React.SetStateAction<boolean>>
@@ -470,7 +486,7 @@ enum NeuraXBluetoothProtocolFunctionEnum{
     FesParam,
     Status,
     Trigger,
-    ACK
+    EmergencyStop
 }
 
 enum NeuraXBluetoothProtocolMethodEnum{

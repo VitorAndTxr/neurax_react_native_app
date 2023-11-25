@@ -5,6 +5,7 @@ import { NeuraXBluetoothProtocolBodyPropertyEnum, useBluetoothContext } from '..
 import { useSessionContext } from '../../context/SessionContext';
 import { StimulatingModalState } from './StimulatingModalState';
 import SegmentService from '../../services/SegmentService';
+import { SessionSegmentStatusEnum } from '../../domain/enum/SessionSegmentStatusEnum';
 
 const segmentService = new SegmentService();
 
@@ -13,16 +14,19 @@ export function WaitingTriggerContentCompoent() {
   const { 
     setStimulationModalState, 
     setShowStimulationModal, 
-    emergencyStopRepetition,
     setStimulatingTimeout,
     stimulatingTimeout,
     repetitions,
+    setRepetitions,
+    emergencyStopRepetition,
+    emergencyStopHandle
     
 
   } = useSessionContext()
 
   const { 
     triggerDettected,
+    emergencyStop,
     setTriggerDetected,
     pauseSession 
   } = useBluetoothContext()
@@ -46,11 +50,25 @@ export function WaitingTriggerContentCompoent() {
         clearTimeout(stimulatingTimeout)
         setStimulatingTimeout(null)
       }
+
+      setRepetitions(current=>{
+        let test = [...current]
+        test[repetitions.length-1].intensity = SessionSegmentStatusEnum.Done
+
+        return test
+      })
   
   
       setStimulationModalState(StimulatingModalState.Stimulating)
     }
   }, [triggerDettected]);
+
+  useEffect(() => {
+    if(emergencyStop){
+      pauseSession()
+      emergencyStopRepetition()
+    }
+  }, [emergencyStop]);
 
   useEffect(() => {
     if(counter>0){
@@ -82,7 +100,7 @@ export function WaitingTriggerContentCompoent() {
         {counter}
       </H2>
       <View style={{ flex: 1, justifyContent: 'center', flexDirection: 'row' }}>
-        <PrimaryRedButton activeOpacity={1} onPress={emergencyStopRepetition}>
+        <PrimaryRedButton activeOpacity={1} onPress={emergencyStopHandle}>
           <RegularButtonText style={{ fontSize: 20 }}>
             Parada de Emergência
           </RegularButtonText>

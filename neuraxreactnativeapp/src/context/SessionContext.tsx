@@ -53,7 +53,8 @@ export function SessionContextProvider({
         startSession,
         stopSession,
         resumeSession,
-        pauseSession
+        setEmergencyStop,
+        emergencyStop
     } = useBluetoothContext()
 
     const [sessionState, setSessionState] = useState<SessionStateEnum>(SessionStateEnum.ConfiguringStimulus);
@@ -78,6 +79,13 @@ export function SessionContextProvider({
         finishWristAmplitudeMeasurement:0,
         id:''
     });
+
+    
+    useEffect(()=>{
+        if(emergencyStop){
+            
+        }
+    },[emergencyStop])
 
     useEffect(()=>{        
         switch(userProfile){
@@ -214,15 +222,20 @@ export function SessionContextProvider({
 
     }
 
+    async function emergencyStopHandle(){
+
+        setEmergencyStop(true)
+    }
+
     async function emergencyStopRepetition(){
         if(stimulatingTimeout){
             clearTimeout(stimulatingTimeout)
             setStimulatingTimeout(null)
         }
 
+        segmentService.emergencyStop(repetitions[repetitions.length-1].id)
 
 
-        await pauseSession()
 
         setRepetitions(currentRepetitions =>{
             let repetitions = [...currentRepetitions]
@@ -234,8 +247,9 @@ export function SessionContextProvider({
         ToastAndroid.show('Parada de emergência solicitada', ToastAndroid.CENTER);
         
         setSessionState(SessionStateEnum.ConfiguringStimulus)
+        setStimulationModalState(StimulatingModalState.Stimulating)
+
         setShowStimulationModal(false)
-        segmentService.emergencyStop(repetitions[repetitions.length-1].id)
         
     }
     
@@ -270,7 +284,8 @@ export function SessionContextProvider({
                 cancelRepetition,
                 emergencyStopRepetition,
                 cancelSession,
-
+                emergencyStopHandle,
+                
                 finishSession
 
             }}>
@@ -322,6 +337,7 @@ interface SessionContextData {
 
     cancelRepetition:()=>void
     emergencyStopRepetition:()=>void
+    emergencyStopHandle:()=>void
     cancelSession:()=>void
 
     finishSession:()=>void

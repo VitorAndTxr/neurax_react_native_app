@@ -6,7 +6,11 @@ import { useSessionContext } from '../../context/SessionContext';
 import { StimulatingModalState } from './StimulatingModalState';
 
 export function FesStimulationContentCompoent() {
-  const {fesParams} = useBluetoothContext()
+  const {
+    fesParams,
+    emergencyStop,
+    pauseSession,
+  } = useBluetoothContext()
 
   const [counter, setCounter] = useState(fesParams[NeuraXBluetoothProtocolBodyPropertyEnum.STIMULI_DURATION]!);
 
@@ -14,6 +18,7 @@ export function FesStimulationContentCompoent() {
     setStimulationModalState,
     setShowStimulationModal,
     setStimulatingTimeout,
+    emergencyStopHandle,
     emergencyStopRepetition
   } = useSessionContext();
 
@@ -25,6 +30,13 @@ export function FesStimulationContentCompoent() {
   useEffect(() => {
     createTimeout
   }, []);
+
+  useEffect(() => {
+    if(emergencyStop){
+      pauseSession()
+      emergencyStopRepetition()
+    }
+  }, [emergencyStop]);
 
   useEffect(() => {
     if(counter>0){
@@ -56,7 +68,7 @@ export function FesStimulationContentCompoent() {
       </H2>
       <View style={{ flex: 1, justifyContent: 'center', flexDirection: 'row' }}>
 
-        <PrimaryButton activeOpacity={1} onPress={() => {emergencyStopRepetition() }}>
+        <PrimaryButton activeOpacity={1} onPress={() => {emergencyStopHandle() }}>
           <RegularButtonText style={{ fontSize: 20 }}>
             Cancelar
           </RegularButtonText>
